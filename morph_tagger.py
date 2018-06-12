@@ -172,7 +172,7 @@ class TrMorphTagger(object):
         else:
             return self.split_root_tags_regex.sub(r"\2", analysis)
 
-    def load_data(self, file_path, max_sentence=10):
+    def load_data(self, file_path, max_sentence=10000000):
         logger.info("Loading data from {}".format(file_path))
         sentence = []
         sentences = []
@@ -455,9 +455,9 @@ class TrMorphTagger(object):
 if __name__ == "__main__":
     disambiguator = TrMorphTagger(train_from_scratch=True,
                                   train_data_path="data/data.train.txt",
-                                  test_data_paths=["data/data.train.txt"],
-                                  # test_data_paths=[
-                                  #     "data/data.test.txt",
-                                  #     "data/test.merge",
-                                  #     "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
+                                  # test_data_paths=["data/data.train.txt"],
+                                  test_data_paths=[
+                                      "data/data.test.txt",
+                                      "data/test.merge",
+                                      "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
                                   model_file_name="encoder_decoder_morph_tagger")
