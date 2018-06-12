@@ -5,6 +5,10 @@ from collections import namedtuple
 import dynet as dy
 from datetime import datetime
 import pickle
+import logging.config
+
+logging.config.fileConfig('resources/logging.ini')
+logger = logging.getLogger(__file__)
 
 
 class TrMorphTagger(object):
@@ -28,7 +32,7 @@ class TrMorphTagger(object):
 
     @classmethod
     def _create_vocab(cls, sentences):
-        print("Building Vocabulary...")
+        logger.info("Building Vocabulary...")
         char2id = dict()
         char2id["<"] = len(char2id)
         char2id["/"] = len(char2id)
@@ -49,7 +53,7 @@ class TrMorphTagger(object):
                         if tag not in char2id:
                             char2id[tag] = len(char2id)
         id2char = {v: k for k, v in char2id.items()}
-        print("Done.")
+        logger.info("Done.")
         return char2id, id2char
 
     @classmethod
@@ -139,7 +143,7 @@ class TrMorphTagger(object):
 
             self.train_model(model_name=model_file_name)
         else:
-            print("Loading Pre-Trained Model")
+            logger.info("Loading Pre-Trained Model")
             assert model_file_name
             self.load_model(model_file_name)
 
@@ -168,7 +172,7 @@ class TrMorphTagger(object):
             return self.split_root_tags_regex.sub(r"\2", analysis)
 
     def load_data(self, file_path, max_sentence=1000000):
-        print("Loading data from {}".format(file_path))
+        logger.info("Loading data from {}".format(file_path))
         sentence = []
         sentences = []
         with open(file_path, 'r', encoding="UTF-8") as f:
@@ -196,7 +200,7 @@ class TrMorphTagger(object):
                         roots = [TrMorphTagger.lower(root) for root in roots]
                     current_word = self.WordStruct(surface, roots, tags)
                     sentence.append(current_word)
-        print("Done.")
+        logger.info("Done.")
         return sentences
 
     @staticmethod
@@ -387,32 +391,36 @@ class TrMorphTagger(object):
                 epoch_loss += cur_loss
                 loss_exp.backward()
                 self.trainer.update()
-                if i > 0 and i % 100 == 0:  # print status
+
+                # PRINT STATUS
+                if i > 0 and i % 100 == 0:
                     t2 = datetime.now()
                     delta = t2 - t1
-                    print("loss = {}  /  {} instances finished in  {} seconds"
-                          .format(epoch_loss / (i * 1.0), i, delta.seconds))
+                    logger.info("loss = {}  /  {} instances finished in  {} seconds"
+                                .format(epoch_loss / (i * 1.0), i, delta.seconds))
                 count = i
             t2 = datetime.now()
             delta = t2 - t1
-            print("Epoch {} finished in {} minutes. loss = {}"
-                  .format(epoch, delta.seconds / 60.0, epoch_loss / count * 1.0))
+            logger.info("Epoch {} finished in {} minutes. loss = {}"
+                        .format(epoch, delta.seconds / 60.0, epoch_loss / count * 1.0))
+
             epoch_loss = 0
+            logger.info("Calculating Accuracy on dev set")
             acc, amb_acc = self.calculate_acc(self.dev)
-            print("Accuracy on dev set: {}  ambiguous accuracy on dev: ".format(acc, amb_acc))
+            logger.info("Accuracy on dev set: {}  ambiguous accuracy on dev: ".format(acc, amb_acc))
             if acc > max_acc:
                 max_acc = acc
-                print("Max accuracy increased = {}, saving model...".format(str(max_acc)))
+                logger.info("Max accuracy increased = {}, saving model...".format(str(max_acc)))
                 self.save_model(model_name)
             elif early_stop and max_acc - acc > 0.05:
-                print("Max accuracy did not increase, early stopping!")
+                logger.info("Max accuracy did not increase, early stopping!")
                 break
 
-            print("Calculating Accuracy on test sets")
+            logger.info("Calculating Accuracy on test sets")
             for q in range(len(self.test_paths)):
-                print("Calculating Accuracy on test set: {}".format(self.test_paths[q]))
+                logger.info("Calculating Accuracy on test set: {}".format(self.test_paths[q]))
                 acc, amb_acc = self.calculate_acc(self.tests[q])
-                print(" accuracy: {}    ambiguous accuracy: {}".format(acc, amb_acc))
+                logger.info(" accuracy: {}    ambiguous accuracy: {}".format(acc, amb_acc))
 
     def save_model(self, model_name):
         self.model.save("models/{}.model".format(model_name))
