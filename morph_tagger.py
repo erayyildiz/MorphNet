@@ -6,6 +6,7 @@ import dynet as dy
 from datetime import datetime
 import pickle
 import logging.config
+import numpy as np
 
 logging.config.fileConfig('resources/logging.ini')
 logger = logging.getLogger(__file__)
@@ -93,7 +94,7 @@ class TrMorphTagger(object):
                 self.train = self.train[:train_size]
 
             self.model = dy.Model()
-            self.trainer = dy.AdamTrainer(self.model)
+            self.trainer = dy.SimpleSGDTrainer(self.model, learning_rate=1.6)
             self.CHARS_LOOKUP = self.model.add_lookup_parameters((len(self.char2id),
                                                                   TrMorphTagger.CHAR_EMBEDDING_SIZE))
 
@@ -171,7 +172,7 @@ class TrMorphTagger(object):
         else:
             return self.split_root_tags_regex.sub(r"\2", analysis)
 
-    def load_data(self, file_path, max_sentence=1000000):
+    def load_data(self, file_path, max_sentence=10):
         logger.info("Loading data from {}".format(file_path))
         sentence = []
         sentences = []
@@ -323,11 +324,11 @@ class TrMorphTagger(object):
                 tag_embedding = self.CHARS_LOOKUP[self.char2id[gold_i]]
                 tag_rnn_state.add_input(tag_embedding)
 
-            losses += [-dy.log(dy.pick(p, self.char2id[output_char])) for p, output_char in zip(probs, gold_sequence)]
-        loss = dy.esum(losses)
-        return loss
+            losses += [-dy.log(dy.pick(p, self.char2id[output_char])) for p, output_char in
+                       zip(probs, gold_sequence)]
+        return dy.esum(losses)
 
-    def generate(self, sentence):
+    def generate(self, sentence, max_tag_count=50):
         surface_words = [word.surface_word for word in sentence]
         if not self.case_sensitive:
             surface_words = [TrMorphTagger.lower(word) for word in surface_words]
@@ -346,11 +347,13 @@ class TrMorphTagger(object):
             rnn_state = self.DEC_RNN.initial_state().set_s([context_representation, dy.tanh(context_representation),
                                                             output_encoder_output, dy.tanh(output_encoder_output)])
             predicted_char = TrMorphTagger.SENTENCE_BEGIN_TAG
+            counter = 0
             while True:
+                counter += 1
                 rnn_state = rnn_state.add_input(self.CHARS_LOOKUP[self.char2id[predicted_char]])
                 probs = self._get_probs(rnn_state.output())
                 predicted_char = self.id2char[probs.npvalue().argmax()]
-                if predicted_char == TrMorphTagger.SENTENCE_END_TAG:
+                if predicted_char == TrMorphTagger.SENTENCE_END_TAG or counter >= max_tag_count:
                     break
                 else:
                     predicted_sequence.append(predicted_char)
