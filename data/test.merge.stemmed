@@ -1,0 +1,958 @@
+
+
+<S>
+hazine+Noun+A3sg+Pnon+Nom	Hazine+[Noun]	False
+Merkez+Noun+Prop+A3sg+Pnon+Acc	merkez+'i[Noun]	False
+rahatla+Verb^DB+Verb+Caus+Pos+Past+A3sg	rahatla+ttı[Verb]	True
+</S>
+
+<S>
+geçen+Adj	Geçen+[Noun]	False
+hafta+Noun+A3sg+Pnon+Nom	hafta+[Noun]	True
+kısa+Adj	kısa+[Adj]	True
+vade+Noun+A3sg+Pnon+Nom^DB+Adj+With	vade+li[Adj]	True
+avans+Noun+A3sg+Pnon+Nom	avans+[Noun]	True
+hesap+Noun+A3sg+P3sg+Dat	hesap+ına[Noun]	True
+48.7+Num+Real	48.7+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+lira+Noun+A3sg+Pnon+Nom^DB+Adj+FitFor	lira+lık[Adj]	True
+geri+Adj	geri+[Adverb]	True
+ödeme+Noun+A3sg+Pnon+Nom	öde+me[Noun]	False
+yap+Verb+Pos^DB+Adj+PresPart	yap+an[Adj]	True
+hazine+Noun+A3sg+Pnon+Nom	Hazine+[Noun]	False
+merkez+Noun+A3sg+Pnon+Nom	Merkez+[Noun]	False
+Banka+Noun+Prop+A3sg+P3sg+Acc	banka+sı'nı[Noun]	False
+rahatla+Verb^DB+Verb+Caus+Pos+Past+A3sg	rahatla+ttı[Verb]	True
+</S>
+<S>
+Hazine+Noun+Prop+A3sg+Pnon+Gen	hazine+'nin[Noun]	False
+kullan+Verb+Pos^DB+Verb+Able^DB+Adj+FutPart+P3sg	kullan+abileceği[Adj]	True
+avans+Noun+A3sg+Pnon+Nom	avans+[Noun]	True
+69.1+Num+Real	69.1+[Num]	True
+trilyon+Num+Card^DB+Noun+Zero+A3sg+Pnon+Dat	trilyon+a[Noun]	True
+çık+Verb+Pos+Aor^DB+Adverb+While	çıkar+ken[Adverb]	False
+,+Punc	,+[Punc]	True
+döviz+Noun+A3sg+Pnon+Nom	döviz+[Noun]	True
+rezerv+Noun+A3pl+P3sg+Loc	rezervlerint+e[Noun]	False
+45+Num+Card	45+[Num]	True
+milyon+Num+Card	milyon+[Num]	True
+dolar+Noun+A3sg+Pnon+Nom^DB+Adj+FitFor	dolar+lık[Adj]	True
+eri+Verb+Pos^DB+Noun+Inf2+A3sg+Pnon+Nom	eri+me[Noun]	True
+gözle+Verb^DB+Verb+Pass+Pos+Past+A3sg	göz+lendi[Verb]	False
+</S>
+<S>
+yılbaş+Noun+A3sg+P3sg+Abl	yilbaşindan+[Noun]	False
+bu+Det	bu+[Det]	True
+yan+Noun+A3sg+Pnon+Dat	yan+a[Verb]	True
+merkez+Noun+A3sg+Pnon+Nom	merkez+[Noun]	True
+banka+Noun+A3sg+P3sg+Nom	Banka+sı[Noun]	False
+kaynak+Noun+A3pl+P3sg+Dat	kaynak+larına[Noun]	True
+yükle+Verb^DB+Verb+Pass+Pos^DB+Adj+PresPart	yükle+nen[Adj]	True
+hazine+Noun+A3sg+Pnon+Nom	Hazine+[Noun]	False
+,+Punc	,+[Punc]	True
+geçen+Adj	geçen+[Adj]	True
+hafta+Noun+A3sg+Pnon+Nom	hafta+[Noun]	True
+durum+Noun+A3sg+P3sg+Acc	durum+unu[Noun]	True
+düzel+Verb^DB+Verb+Caus+Pos+Past+A3sg	düzel+tti[Verb]	True
+</S>
+<S>
+geçen+Adj	Geçen+[Noun]	False
+hafta+Noun+A3sg+Pnon+Nom	hafta+[Noun]	True
+48.7+Num+Real	48.7+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+lira+Noun+A3sg+Pnon+Nom^DB+Adj+FitFor	lira+lık[Adj]	True
+avans+Noun+A3sg+Pnon+Nom	avans+[Noun]	True
+kapa+Verb^DB+Verb+Caus+Pos^DB+Adj+PresPart	kapa+tan[Adj]	True
+hazine+Noun+A3sg+Pnon+Nom	Hazine+[Noun]	False
+kullan+Verb+Pos^DB+Verb+Able^DB+Adj+FutPart+P3sg	kullan+abileceği[Adj]	True
+kısa+Adj	kısa+[Adj]	True
+vade+Noun+A3sg+Pnon+Nom^DB+Adj+With	vade+li[Adj]	True
+avans+Noun+A3sg+Pnon+Nom	avans+[Noun]	True
+tutar+Noun+A3sg+P3sg+Acc	tutar+ını[Noun]	True
+da+Conj	da+[Conj]	True
+69.1+Num+Real	69.1+[Num]	True
+trilyon+Num+Card^DB+Noun+Zero+A3sg+Pnon+Dat	trilyon+a[Noun]	True
+çık+Verb^DB+Verb+Caus+Pos+Past+A3sg	çık+ardı[Verb]	True
+</S>
+<S>
+merkez+Noun+A3sg+Pnon+Nom	merkez+[Noun]	True
+Banka+Noun+Prop+A3sg+P3sg+Gen	banka+sı'nın[Noun]	False
+17+Num+Card	17+[Num]	True
+-+Punc	-+[Punc]	True
+24+Num+Card	24+[Num]	True
+ocak+Noun+A3sg+Pnon+Nom	Ocak+[Noun]	False
+tarih+Noun+A3sg+Pnon+Nom^DB+Adj+With	tarih+li[Adj]	True
+bilanço+Noun+A3sg+P3sg+Dat	bilanço+suna[Noun]	True
+göre+Postp+PCDat	göre+[Postp]	True
+484.6+Num+Real	484.6+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+lira+Noun+A3sg+Pnon+Nom	lira+[Noun]	True
+ol+Verb+Pos^DB+Adj+PresPart	ol+an[Adj]	True
+kısa+Adj	kısa+[Adj]	True
+vade+Noun+A3sg+Pnon+Nom^DB+Adj+With	vade+li[Adj]	True
+avans+Noun+A3sg+Pnon+Nom	avans+[Noun]	True
+,+Punc	,+[Punc]	True
+bir+Num+Card	bir+[Det]	True
+hafta+Noun+A3sg+Pnon+Loc	hafta+da[Noun]	True
+48.7+Num+Real	48.7+[Num]	True
+trilyon+Num+Card^DB+Noun+Ness+A3sg+Pnon+Nom	trilyon+luk[Noun]	True
+azal+Verb+Pos^DB+Noun+Inf3+A3sg+Pnon+Ins	azal+ışla[Noun]	True
+24+Num+Card	24+[Num]	True
+Ocak+Noun+Prop+A3sg+Pnon+Loc	Ocak+'ta[Noun]	True
+435.8+Num+Real	435.8+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+lira+Noun+A3sg+Pnon+Dat	lira+ya[Noun]	True
+in+Verb+Pos+Past+A3sg	in+di[Verb]	True
+</S>
+<S>
+Hazine+Noun+Prop+A3sg+Pnon+Gen	hazine+'nin[Noun]	False
+geri+Adj	geri+[Adverb]	True
+ödeme+Noun+A3sg+P3sg+Ins	öde+mesiyle[Noun]	False
+merkez+Noun+A3sg+Pnon+Nom	Merkez+[Noun]	False
+Banka+Noun+Prop+A3sg+P3sg+Gen	banka+sı'nın[Noun]	False
+iç+Adj	iç+[Noun]	True
+varlık+Noun+A3pl+P3sg+Nom	varlık+ları[Noun]	True
+önem+Noun+A3sg+Pnon+Nom^DB+Adj+With	önem+li[Adj]	True
+ölçü+Noun+A3sg+Pnon+Loc	ölçüt+e[Noun]	False
+gerile+Verb+Pos+Past+A3sg	gerile+di[Verb]	True
+</S>
+<S>
+17+Num+Card	17+[Num]	True
+Ocak+Noun+Prop+A3sg+Pnon+Loc	Ocak+'ta[Noun]	True
+738.9+Num+Real	738.9+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+lira+Noun+A3sg+Pnon+Nom	lira+[Noun]	True
+ol+Verb+Pos^DB+Adj+PresPart	ol+an[Adj]	True
+iç+Noun+A3sg+Pnon+Nom	iç+[Adj]	True
+varlık+Noun+A3pl+Pnon+Nom	varlık+lar[Noun]	True
+toplam+Noun+A3sg+P3sg+Nom	toplam+ı[Noun]	True
+72.1+Num+Real	72.1+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+lira+Noun+A3sg+Pnon+Nom^DB+Adj+FitFor	lira+lık[Adj]	True
+azal+Verb+Pos^DB+Noun+Inf3+A3sg+Pnon+Ins	azal+ışla[Noun]	True
+666.8+Num+Real	666.8+[Num]	True
+trilyon+Num+Card^DB+Noun+Zero+A3sg+Pnon+Dat	trilyon+a[Noun]	True
+düş+Verb+Pos+Past+A3sg	düş+tü[Verb]	True
+</S>
+<S>
+kamu+Noun+A3sg+Pnon+Dat	kamu+ya[Noun]	True
+aç+Verb^DB+Verb+Pass+Pos^DB+Adj+PresPart	aç+ılan[Adj]	True
+kredi+Noun+A3pl+Pnon+Gen	kredi+lerin[Noun]	True
+gerile+Verb+Pos^DB+Noun+Inf2+A3sg+P3sg+Nom	gerile+mesi[Noun]	True
+yan+Noun+A3sg+P3sg+Loc	yan+ında[Noun]	True
+açık+Adj	Açık+[Adj]	False
+piyasa+Noun+A3sg+Pnon+Nom	piyasa+[Noun]	True
+işlem+Noun+A3pl+P3sg+Nom	İşlem+leri[Noun]	False
+yol+Noun+A3sg+P3sg+Ins	yol+uyla[Noun]	True
+piyasa+Noun+A3sg+Pnon+Abl	piyasa+dan[Noun]	True
+çek+Verb^DB+Verb+Pass+Pos^DB+Adj+PresPart	çek+ilen[Adj]	True
+likidite+Noun+A3sg+Pnon+Gen	likidite+nin[Noun]	True
+etki+Noun+A3sg+P3sg+Ins	etki+siyle[Noun]	True
+72.1+Num+Real	72.1+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+lira+Noun+A3sg+Pnon+Nom^DB+Adj+FitFor	lira+lık[Adj]	True
+iç+Adj	iç+[Adj]	True
+varlık+Noun+A3pl+Pnon+Gen	varlık+ların[Noun]	True
+azal+Verb+Pos^DB+Noun+Inf3+A3sg+P3sg+Nom	azal+ışı[Noun]	True
+ile+Postp+PCNom	ile+[Postp]	True
+birlikte+Postp+PCIns	birlik+te[Postp]	False
+rezerv+Noun+A3sg+Pnon+Nom	rezerv+[Noun]	True
+para+Noun+A3sg+Pnon+Nom	para+[Noun]	True
+ve+Conj	ve+[Conj]	True
+merkez+Noun+A3sg+Pnon+Nom	merkez+[Noun]	True
+banka+Noun+A3sg+P3sg+Nom	Banka+sı[Noun]	False
+para+Noun+A3sg+P3sg+Loc	para+sında[Noun]	True
+da+Conj	da+[Conj]	True
+gerile+Verb+Pos^DB+Noun+Inf2+A3sg+Pnon+Nom	gerile+me[Noun]	True
+gözle+Verb^DB+Verb+Pass+Pos+Past+A3sg	göz+lendi[Verb]	False
+</S>
+<S>
+17+Num+Card	17+[Num]	True
+Ocak+Noun+Prop+A3sg+Pnon+Loc	Ocak+'ta[Noun]	True
+158.5+Num+Real	158.5+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+ol+Verb+Pos^DB+Adj+PresPart	ol+an[Adj]	True
+açık+Adj	Açık+[Adj]	False
+piyasa+Noun+A3sg+Pnon+Nom	piyasa+[Noun]	True
+işlem+Noun+A3pl+P3sg+Nom	İşlem+leri[Noun]	False
+borç+Noun+A3sg+P3sg+Nom	borcu+[Noun]	False
+10+Num+Card	10+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+lira+Noun+A3sg+Pnon+Nom^DB+Adj+FitFor	lira+lık[Adj]	True
+art+Verb+Pos^DB+Noun+Inf3+A3sg+Pnon+Ins	art+ışla[Noun]	True
+24+Num+Card	24+[Num]	True
+ocak+Noun+A3sg+Pnon+Nom	Ocak+[Noun]	False
+itibar+Noun+A3sg+P3sg+Nom	itibar+ı[Noun]	True
+ile+Postp+PCNom	ile+[Postp]	True
+168.5+Num+Real	168.5+[Num]	True
+trilyon+Num+Card^DB+Noun+Zero+A3sg+Pnon+Dat	trilyon+a[Noun]	True
+çık+Verb+Pos+Past+A3sg	çık+tı[Verb]	True
+</S>
+<S>
+638.6+Num+Real	638.6+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+lira+Noun+A3sg+Pnon+Nom	lira+[Noun]	True
+düzey+Noun+A3sg+P3sg+Loc	düzey+inde[Noun]	True
+ol+Verb+Pos^DB+Adj+PresPart	ol+an[Adj]	True
+rezerv+Noun+A3sg+Pnon+Nom	rezerv+[Noun]	True
+para+Noun+A3sg+Pnon+Nom	para+[Noun]	True
+i+Verb+Pos+Cond+A3sg	i+se[Verb]	True
+27.8+Num+Real	27.8+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+lira+Noun+A3sg+Pnon+Nom^DB+Adj+FitFor	lira+lık[Adj]	True
+azal+Verb+Pos^DB+Noun+Inf3+A3sg+Pnon+Ins	azal+ışla[Noun]	True
+610.8+Num+Real	610.8+[Num]	True
+trilyon+Num+Card^DB+Noun+Zero+A3sg+Pnon+Dat	trilyon+a[Noun]	True
+gerile+Verb+Pos+Past+A3sg	gerile+di[Verb]	True
+</S>
+<S>
+bu+Pron+Demons+A3sg+Pnon+Ins	Bu+nunla[Noun]	False
+birlikte+Postp+PCIns	birlikte+[Postp]	True
+399.7+Num+Real	399.7+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+lira+Noun+A3sg+Pnon+Nom	lira+[Noun]	True
+ol+Verb+Pos^DB+Adj+PresPart	ol+an[Adj]	True
+emisyon+Noun+A3sg+Pnon+Nom	emisyon+[Noun]	True
+miktar+Noun+A3sg+P3sg+Nom	miktar+ı[Noun]	True
+23.4+Num+Real	23.4+[Num]	True
+trilyon+Num+Card	trilyon+[Num]	True
+lira+Noun+A3sg+Pnon+Nom^DB+Adj+FitFor	lira+lık[Adj]	True
+bir+Det	bir+[Det]	True
+azal+Verb+Pos^DB+Noun+Inf3+A3sg+Pnon+Ins	azal+ışla[Noun]	True
+376.3+Num+Real	376.3+[Num]	True
+in+Verb+Pos+Past+A3sg	in+di[Verb]	True
+</S>
+<S>
+ancak+Conj	ancak+[Conj]	True
+merkez+Noun+A3sg+Pnon+Nom	merkez+[Noun]	True
+banka+Noun+A3sg+P3sg+Nom	Banka+sı[Noun]	False
+Tl+Noun+Prop+A3sg+Pnon+Nom	TL+[Noun]	False
+yön+Noun+A3sg+P3sg+Abl	yön+ünden[Noun]	True
+rahatla+Verb+Pos+Aor^DB+Adverb+While	rahatla+rken[Adverb]	True
+,+Punc	,+[Punc]	True
+döviz+Noun+A3sg+Pnon+Nom	döviz+[Noun]	True
+rezerv+Noun+A3pl+P3sg+Loc	rezervlerint+e[Noun]	False
+eri+Verb+Pos^DB+Noun+Inf2+A3sg+Pnon+Nom	erim+e[Noun]	False
+gözle+Verb^DB+Verb+Pass+Pos+Past+A3sg	göz+lendi[Verb]	False
+</S>
+<S>
+17+Num+Card	17+[Num]	True
+Ocak+Noun+Prop+A3sg+Pnon+Loc	Ocak+'ta[Noun]	True
+16+Num+Card	16+[Num]	True
+milyar+Num+Card	milyar+[Num]	True
+358+Num+Card	358+[Num]	True
+milyon+Num+Card	milyon+[Num]	True
+dolar+Noun+A3sg+Pnon+Nom	dolar+[Noun]	True
+ol+Verb+Pos^DB+Adj+PresPart	ol+an[Adj]	True
+Banka+Noun+Prop+A3sg+Pnon+Gen	banka+'nın[Noun]	False
+döviz+Noun+A3sg+Pnon+Nom	döviz+[Noun]	True
+rezerv+Noun+A3pl+P3sg+Nom	rezerv+leri[Noun]	True
+,+Punc	,+[Punc]	True
+45+Num+Card	45+[Num]	True
+milyon+Num+Card	milyon+[Num]	True
+dolar+Noun+A3sg+Pnon+Nom	dolar+[Noun]	True
+azal+Verb+Pos^DB+Adverb+ByDoingSo	azal+arak[Adverb]	True
+24+Num+Card	24+[Num]	True
+Ocak+Noun+Prop+A3sg+Pnon+Loc	Ocak+'ta[Noun]	True
+16+Num+Card	16+[Num]	True
+milyar+Num+Card	milyar+[Num]	True
+313+Num+Card	313+[Num]	True
+milyon+Num+Card	milyon+[Num]	True
+dolar+Noun+A3sg+Pnon+Dat	dolar+a[Noun]	True
+gerile+Verb+Pos+Past+A3sg	gerile+di[Verb]	True
+</S>
+<S>
+Ocak+Noun+Prop+A3sg+Pnon+Loc	Ocak+'ta[Noun]	True
+356+Num+Card	356+[Num]	True
+milyon+Num+Card	milyon+[Num]	True
+***UNKNOWN	$+[Num]	False
+borç+Noun+A3sg+Pnon+Nom	borç+[Noun]	True
+öde+Verb^DB+Verb+Pass+Pos+Past+A3sg	öde+ndi[Verb]	True
+</S>
+<S>
+dış+Adj	DIŞ+[Noun]	False
+borç+Noun+A3sg+Pnon+Nom	borç+[Noun]	True
+ödeme+Noun+A3pl+P3sg+Nom	öde+meleri[Noun]	False
+,+Punc	,+[Punc]	True
+yıl+Noun+A3sg+Pnon+Gen	yıl+ın[Noun]	True
+ilk+Adj	ilk+[Adj]	True
+ay+Noun+A3sg+P3sg+Loc	ay+ında[Noun]	True
+356.39+Num+Real	356.39+[Num]	True
+milyon+Num+Card	milyon+[Num]	True
+dolar+Noun+A3sg+Pnon+Nom	dolar+[Noun]	True
+ol+Verb+Pos^DB+Adverb+ByDoingSo	ol+arak[Adverb]	True
+gerçek+Noun+A3sg+Pnon+Nom^DB+Verb+Become+Pos+Past+A3sg	gerçek+leşti[Verb]	True
+</S>
+<S>
+merkez+Noun+A3sg+Pnon+Nom	merkez+[Noun]	True
+banka+Noun+A3sg+P3sg+Nom	Banka+sı[Noun]	False
+veri+Noun+A3pl+P3sg+Dat	veri+lerine[Noun]	True
+göre+Postp+PCDat	göre+[Postp]	True
+,+Punc	,+[Punc]	True
+2+Num+Card	2+[Num]	True
+-+Punc	-+[Punc]	True
+29+Num+Card	29+[Num]	True
+ocak+Noun+A3sg+Pnon+Nom	Ocak+[Noun]	False
+tarih+Noun+A3pl+P3pl+Nom	tarih+leri[Noun]	True
+ara+Noun+A3sg+P3sg+Loc^DB+Adj+Rel	ara+sındaki[Adj]	True
+ödeme+Noun+A3pl+Pnon+Gen	ödeme+lerin[Noun]	True
+253.42+Num+Real	253.42+[Num]	True
+milyon+Num+Card	milyon+[Num]	True
+dolar+Noun+A3sg+P3sg+Nom	dolar+ı[Noun]	True
+Hazine+Noun+Prop+A3sg+Pnon+Dat	hazine+'ye[Noun]	False
+,+Punc	,+[Punc]	True
+55.12+Num+Real	55.12+[Num]	True
+milyon+Num+Card	milyon+[Num]	True
+dolar+Noun+A3sg+P3sg+Nom	dolar+ı[Noun]	True
+merkez+Noun+A3sg+Pnon+Nom	merkez+[Noun]	True
+Banka+Noun+Prop+A3sg+P3sg+Dat	banka+sı'na[Noun]	False
+,+Punc	,+[Punc]	True
+47.85+Num+Real	47.85+[Num]	True
+milyon+Num+Card	milyon+[Num]	True
+dolar+Noun+A3sg+P3sg+Nom	dolar+ı[Noun]	True
+diğer+Adj	diğer+[Adj]	True
+kamu+Noun+A3sg+Pnon+Nom	kamu+[Noun]	True
+kuruluş+Noun+A3pl+P3sg+Dat	kuruluş+larına[Noun]	True
+ait+Postp+PCDat	ait+[Postp]	True
+bulun+Verb+Pos+Prog1+A3sg	bulun+uyor[Verb]	True
+</S>
+<S>
+geçen+Adj	Geçen+[Noun]	False
+yıl+Noun+A3sg+Pnon+Nom	yıl+[Noun]	True
+gerçek+Adj^DB+Verb+Become^DB+Verb+Caus^DB+Verb+Pass+Pos^DB+Adj+PresPart	gerçek+leştirilen[Adj]	True
+dış+Adj	dış+[Noun]	True
+borç+Noun+A3sg+Pnon+Nom	borç+[Noun]	True
+ödeme+Noun+A3pl+P3sg+Gen	öde+melerinin[Noun]	False
+toplam+Noun+A3sg+P3sg+Nom	toplam+ı[Noun]	True
+,+Punc	,+[Punc]	True
+9+Num+Card	9+[Num]	True
+milyar+Num+Card	milyar+[Num]	True
+413.93+Num+Real	413.93+[Num]	True
+milyon+Num+Card	milyon+[Num]	True
+dolar+Noun+A3sg+Pnon+Nom	dolar+[Noun]	True
+ol+Verb+Pos+Narr+Past+A3sg	ol+muştu[Verb]	True
+</S>
+
+
+
+<S>
+petrol+Noun+A3sg+Pnon+Nom	Petrol+[Noun]	False
+piyasa+Noun+A3pl+P3sg+Loc	piyasa+larında[Noun]	True
+Irak+Noun+Prop+A3sg+Pnon+Nom	Irak+[Noun]	True
+şok+Noun+A3sg+P3sg+Nom	şok+u[Noun]	True
+</S>
+
+<S>
+sema+Noun+A3sg+Pnon+Nom	Sema+[Noun]	False
+emiroğlu+Noun+A3sg+Pnon+Nom	emiroğlu+[Noun]	True
+-+Punc	-+[Punc]	True
+new+Noun+A3sg+Pnon+Nom	NEW+[Noun]	False
+York+Noun+Prop+A3sg+Pnon+Nom	york+[Noun]	False
+/+Punc	/+[Punc]	True
+bm+Noun+A3sg+Pnon+Nom	BM+[Noun]	False
+</S>
+<S>
+Irak+Noun+Prop+A3sg+Pnon+Nom	irak+[Noun]	False
+petrol+Noun+A3sg+P3sg+Gen	petrol+ünün[Noun]	True
+Kerkük+Noun+Prop+A3sg+Pnon+Nom	kerkük+[Noun]	False
+-+Punc	-+[Punc]	True
+yumurtalık+Noun+Prop+A3sg+Pnon+Nom	yumurtalık+[Noun]	True
+boru+Noun+A3sg+Pnon+Nom	boru+[Noun]	True
+hat+Noun+A3sg+P3sg+Abl	hatıt+ından[Noun]	False
+ak+Verb+Pos^DB+Noun+Inf2+A3sg+P3sg+Acc	ak+masını[Noun]	True
+sağla+Verb+Pos^DB+Adj+PresPart	sağla+yan[Adj]	True
+bm+Noun+A3sg+Pnon+Nom	BM+[Noun]	False
+karar+Noun+A3sg+P3sg+Gen	karar+ının[Noun]	True
+uygula+Verb^DB+Verb+Pass+Pos^DB+Noun+Inf2+A3sg+P3sg+Nom	uygula+nması[Noun]	True
+,+Punc	,+[Punc]	True
+petrol+Noun+A3sg+Pnon+Nom	petrol+[Noun]	True
+fiyat+Noun+A3pl+P3sg+Gen	fiyat+larının[Noun]	True
+,+Punc	,+[Punc]	True
+bekle+Verb^DB+Verb+Pass+Pos^DB+Adj+PresPart^DB+Noun+Zero+A3sg+Pnon+Gen	bekle+nenin[Noun]	True
+aksine+Adverb	aksine+[Adverb]	True
+hız+Noun+A3sg+Pnon+Ins	hız+la[Noun]	True
+art+Verb+Pos^DB+Noun+Inf2+A3sg+P3sg+Dat	art+masına[Noun]	True
+neden+Noun+A3sg+Pnon+Nom	neden+[Noun]	True
+ol+Verb+Pos+Aor^DB+Adverb+While	ol+urken[Adverb]	True
+,+Punc	,+[Punc]	True
+petrol+Noun+A3sg+Pnon+Nom	petrol+[Noun]	True
+sat+Verb+Pos^DB+Noun+Inf3+A3sg+Pnon+Nom	sat+ış[Noun]	True
+kota+Noun+A3sg+P3sg+Nom	kota+sı[Noun]	True
+,+Punc	,+[Punc]	True
+miktar+Noun+A3sg+Pnon+Dat	miktar+a[Noun]	True
+değil+Conj	değil+[Verb]	True
+,+Punc	,+[Punc]	True
+para+Noun+A3sg+Pnon+Dat	para+ya[Noun]	True
+göre+Postp+PCDat	göre+[Postp]	True
+belirle+Verb^DB+Verb+Pass+Pos^DB+Noun+PastPart+A3sg+P3sg+Nom	belirle+ndiği[Noun]	True
+için+Postp+PCNom	için+[Postp]	True
+,+Punc	,+[Punc]	True
+Irak+Noun+Prop+A3sg+Pnon+Gen	Irak+'ın[Noun]	True
+bazı+Adj	bazı+[Adj]	True
+firma+Noun+A3pl+Pnon+Ins	firma+larla[Noun]	True
+imzala+Verb+Pos^DB+Adj+PastPart+P3sg	imzala+dığı[Adj]	True
+sat+Verb+Pos^DB+Noun+Inf3+A3sg+Pnon+Nom	sat+ış[Noun]	True
+sözleşme+Noun+A3pl+P3sg+Nom	sözleşme+leri[Noun]	True
+iptal+Noun+A3sg+Pnon+Nom	iptal+[Noun]	True
+et+Verb^DB+Verb+Pass+Pos+Prog1+A3sg	ed+iliyor[Verb]	False
+</S>
+<S>
+Irak+Noun+Prop+A3sg+Pnon+Dat	Irak+'a[Noun]	True
+"+Punc	"+[Punc]	True
+gıda+Noun+A3sg+Pnon+Dat	gıda+ya[Noun]	True
+karşı+Postp+PCDat	karşı+[Postp]	True
+kısıt+Noun+A3sg+Pnon+Nom^DB+Adj+With	kısıt+lı[Adj]	True
+miktar+Noun+A3sg+Pnon+Loc	miktar+da[Noun]	True
+petrol+Noun+A3sg+Pnon+Nom	petrol+[Noun]	True
+sat+Verb+Pos^DB+Noun+Inf3+A3sg+Pnon+Nom	sat+ış[Noun]	True
+"+Punc	"+[Punc]	True
+izin+Noun+A3sg+P3sg+Nom	izni+[Noun]	False
+ver+Verb+Pos^DB+Adj+PresPart	ver+en[Adj]	True
+Bm+Noun+Prop+A3sg+Pnon+Gen	BM+'nin[Noun]	False
+987+Num+Card	987+[Num]	True
+sayılı+Adj	sayılı+[Adj]	True
+karar+Noun+A3sg+P3sg+Nom	karar+ı[Noun]	True
+Bağdat+Noun+Prop+A3sg+Pnon+Nom	Bağdat+[Noun]	True
+yönetim+Noun+A3sg+P3sg+Dat	yönetim+ine[Noun]	True
+,+Punc	,+[Punc]	True
+ilk+Adj	ilk+[Adj]	True
+altı+Num+Card	altı+[Num]	True
+ay+Noun+A3sg+Pnon+Nom	ay+[Noun]	True
+iç+Noun+A3sg+P3sg+Loc	iç+inde[Noun]	True
+2+Num+Card	2+[Num]	True
+milyar+Num+Card	milyar+[Num]	True
+dolar+Noun+A3sg+Pnon+Nom	dolar+[Noun]	True
+değer+Noun+A3sg+P3sg+Loc	değer+inde[Noun]	True
+petrol+Noun+A3sg+Pnon+Nom	petrol+[Noun]	True
+sat+Verb+Pos^DB+Noun+Inf2+A3sg+P3sg+Dat	sat+masına[Noun]	True
+izin+Noun+A3sg+Pnon+Nom	izin+[Noun]	True
+ver+Verb+Pos+Prog1+A3sg	ver+iyor[Verb]	True
+</S>
+<S>
+kendi+Pron+Reflex+A3sg+P3sg+Dat	kendi+sine[Noun]	True
+tanı+Verb^DB+Verb+Pass+Pos^DB+Adj+PresPart	tanı+nan[Adj]	True
+petrol+Noun+A3sg+Pnon+Nom	petrol+[Noun]	True
+sat+Verb+Pos^DB+Noun+Inf3+A3sg+Pnon+Nom	sat+ış[Noun]	True
+kota+Noun+A3sg+P3sg+Acc	kota+sını[Noun]	True
+dol+Verb^DB+Verb+Caus+Pos^DB+Adj+FutPart+Pnon	dol+duracak[Adj]	True
+kadar+Postp+PCDat	kadar+[Postp]	True
+sözleşme+Noun+A3sg+Pnon+Nom	sözleşme+[Noun]	True
+imzala+Verb+Pos^DB+Adj+PresPart	imzala+yan[Adj]	True
+Irak+Noun+Prop+A3sg+Pnon+Gen	Irak+'ın[Noun]	True
+birkaç+Det	birkaç+[Det]	True
+ay+Noun+A3sg+Pnon+Nom	ay+[Noun]	True
+iç+Noun+A3sg+P3sg+Loc	iç+inde[Noun]	True
+bu+Det	bu+[Det]	True
+kota+Noun+A3sg+Pnon+Gen	kota+nın[Noun]	True
+üzer+Noun+A3sg+P3sg+Dat	üzer+ine[Noun]	True
+çık+Verb+Pos^DB+Adj+FutPart+Pnon	çık+acak[Verb]	True
+kadar+Postp+PCDat	kadar+[Postp]	True
+talep+Noun+A3sg+Pnon+Ins	talep+le[Noun]	True
+karşılaş+Verb+Pos^DB+Adj+FutPart+P3sg	karşılaş+acağı[Noun]	True
+ve+Conj	ve+[Conj]	True
+Bm+Noun+Prop+A3sg+Pnon+Abl	BM+'den[Noun]	False
+,+Punc	,+[Punc]	True
+kota+Noun+A3sg+Pnon+Gen	kota+nın[Noun]	True
+art+Verb^DB+Verb+Caus^DB+Verb+Pass+Pos^DB+Noun+Inf2+A3sg+P3sg+Acc	art+tırılmasını[Noun]	True
+iste+Verb+Pos^DB+Noun+FutPart+A3sg+P3sg+Nom	iste+yeceği[Noun]	True
+belir+Verb^DB+Verb+Caus^DB+Verb+Pass+Pos+Prog1+A3sg	belir+tiliyor[Verb]	True
+</S>
+<S>
+ancak+Conj	ancak+[Conj]	True
+baş+Noun+A3sg+Pnon+Loc	baş+ta[Noun]	True
+Abd+Noun+Prop+A3sg+Pnon+Nom	AB+D[Noun]	False
+ol+Verb+Pos^DB+Noun+Inf1+A3sg+Pnon+Nom	ol+mak[Noun]	True
+üzere+Postp+PCNom	üzere+[Postp]	True
+bm+Noun+A3sg+Pnon+Nom	BM+[Noun]	False
+güvenlik+Noun+A3sg+Pnon+Nom	güvenlik+[Noun]	True
+Konsey+Noun+Prop+A3sg+P3sg+Dat	konsey+i'ne[Noun]	False
+üye+Noun+A3sg+Pnon+Nom	üye+[Noun]	True
+ülke+Noun+A3pl+Pnon+Gen	ülke+lerin[Noun]	True
+diplomat+Noun+A3pl+P3pl+Nom	diplomat+ları[Noun]	True
+ilk+Adj	ilk+[Adj]	True
+altı+Num+Card	altı+[Num]	True
+ay+Noun+A3sg+Pnon+Nom^DB+Adj+FitFor	aylık+[Noun]	False
+süre+Noun+A3sg+Pnon+Nom	süre+[Noun]	True
+dol+Verb+Pos^DB+Adverb+When^DB+Noun+Zero+A3sg+Pnon+Dat	dol+uncaya[Noun]	True
+kadar+Postp+PCDat	kadar+[Postp]	True
+Irak+Noun+Prop+A3sg+Pnon+Gen	Irak+'ın[Noun]	True
+bu+Det	bu+[Det]	True
+talep+Noun+A3sg+P3sg+Acc	talep+ini[Noun]	True
+gözön+Noun+A3sg+P3sg+Dat	gözön+üne[Noun]	True
+bile+Adverb	bile+[Adverb]	True
+al+Verb+Neg^DB+Noun+FutPart+A3pl+P3pl+Acc	al+mayacaklarını[Noun]	True
+bil+Verb^DB+Verb+Caus+Pos+Past+A3pl	bil+dirdiler[Verb]	True
+</S>
+<S>
+bu+Det	bu+[Det]	True
+neden+Noun+A3sg+Pnon+Ins	neden+le[Noun]	True
+,+Punc	,+[Punc]	True
+ara+Noun+A3pl+P3pl+Loc	ara+larında[Noun]	True
+Abd+Noun+Prop+A3sg+Pnon+Gen	ABD+'nin[Noun]	False
+teaco+Noun+A3sg+Pnon+Nom	teaç+O[Noun]	False
+ınc+Noun+A3sg+Pnon+Nom	Inc+[Noun]	False
+.+Punc	.+[Punc]	True
+,+Punc	,+[Punc]	True
+İtalya+Noun+Prop+A3sg+Pnon+Gen	İtalya+'nın[Noun]	True
+agıp+Noun+A3sg+Pnon+Nom	agip+[Noun]	False
+spa+Noun+A3sg+Pnon+Nom	SPA+[Noun]	False
+ve+Conj	ve+[Conj]	True
+Japonya+Noun+Prop+A3sg+Pnon+Gen	japonya+'nın[Noun]	False
+Mitsubishi+Noun+Prop+A3sg+Pnon+Nom	mitsubishi+[Noun]	False
+corp+Noun+A3sg+Pnon+Nom	Corp+[Noun]	False
+.+Punc	.+[Punc]	True
+'+Punc	'+[Noun]	True
+un+Noun+A3sg+Pnon+Nom	un+[Noun]	True
+da+Conj	da+[Conj]	True
+bulun+Verb+Pos^DB+Adj+PastPart+P3sg	bulun+duğu[Adj]	True
+dünya+Noun+A3sg+Pnon+Nom	dünya+[Noun]	True
+çap+Noun+A3sg+P3sg+Loc^DB+Adj+Rel	çap+ındaki[Adj]	True
+pek+Adverb	pek+[Adverb]	True
+çok+Adj	çok+[Det]	True
+şirket+Noun+A3sg+Pnon+Nom	şirket+[Noun]	True
+Irak+Noun+Prop+A3sg+Pnon+Gen	irak+'ın[Noun]	False
+,+Punc	,+[Punc]	True
+Bm+Noun+Prop+A3sg+Pnon+Gen	BM+'nin[Noun]	False
+tanı+Verb+Pos^DB+Adj+PastPart+P3sg	tanı+dığı[Adj]	True
+parametre+Noun+A3pl+Pnon+Nom	parametre+ler[Noun]	True
+iç+Noun+A3sg+P3sg+Loc	iç+inde[Noun]	True
+kal+Verb+Pos^DB+Verb+Able^DB+Noun+Inf1+A3sg+Pnon+Nom	kalap+ilmek[Noun]	False
+için+Postp+PCNom	için+[Postp]	True
+ocak+Noun+A3sg+Pnon+Nom	Ocak+[Noun]	False
+ay+Noun+A3sg+P3sg+Nom	ay+ı[Noun]	True
+hacim+Noun+A3pl+P3sg+Acc	hacim+lerini[Noun]	True
+yarı+Noun+A3sg+Pnon+Nom	yarı+[Noun]	True
+yarı+Noun+A3sg+Pnon+Dat	yarı+ya[Noun]	True
+azal+Verb^DB+Verb+Caus+Pos^DB+Noun+PastPart+A3sg+P3sg+Acc	azal+ttığını[Noun]	True
+bil+Verb^DB+Verb+Caus+Pos+Past+A3sg	bil+dirdi[Verb]	True
+</S>
+<S>
+bu+Det	bu+[Noun]	True
+açıkla+Verb+Pos^DB+Noun+Inf2+A3sg+Pnon+Nom	açıkla+ma[Noun]	True
+,+Punc	,+[Punc]	True
+piyasa+Noun+A3pl+Pnon+Dat	piyasa+lara[Noun]	True
+,+Punc	,+[Punc]	True
+"+Punc	"+[Punc]	True
+Irak+Noun+Prop+A3sg+Pnon+Abl	Irak+'tan[Noun]	True
+bekle+Verb^DB+Verb+Pass+Pos^DB+Adj+PresPart^DB+Noun+Zero+A3sg+Pnon+Abl	bekle+nenden[Noun]	True
+daha+Adverb	daha+[Adverb]	True
+az+Adj	az+[Adj]	True
+miktar+Noun+A3sg+Pnon+Loc	miktar+da[Noun]	True
+petrol+Noun+A3sg+Pnon+Nom	petrol+[Noun]	True
+ak+Verb+Pos^DB+Noun+FutPart+A3sg+P3sg+Nom	ak+acağı[Noun]	True
+"+Punc	"+[Punc]	True
+sinyal+Noun+A3sg+P3sg+Acc	sinyal+ini[Noun]	True
+ver+Verb+Pos^DB+Adverb+When	ver+ince[Adverb]	True
+,+Punc	,+[Punc]	True
+fiyat+Noun+A3pl+P3sg+Nom	fiyat+ları[Noun]	True
+yüksel+Verb^DB+Verb+Caus+Pos^DB+Noun+Agt+A3sg+Pnon+Nom	yükseltiç+i[Noun]	False
+bir+Det	bir+[Det]	True
+etki+Noun+A3sg+Pnon+Nom	etki+[Noun]	True
+yap+Verb+Pos+Past+A3sg	yap+tı[Verb]	True
+</S>
+<S>
+Irak+Noun+Prop+A3sg+Pnon+Nom	Irak+[Noun]	True
+,+Punc	,+[Punc]	True
+petrol+Noun+A3sg+Pnon+Nom	petrol+[Noun]	True
+fiyat+Noun+A3pl+P3sg+Nom	fiyat+ları[Noun]	True
+art+Verb+Pos^DB+Noun+PastPart+A3sg+P3sg+Nom	art+tığı[Noun]	True
+süre+Noun+A3sg+Pnon+Equ	süreç+e[Noun]	False
+2+Num+Card	2+[Num]	True
+milyon+Num+Card	milyon+[Num]	True
+dolar+Noun+A3sg+Pnon+Nom^DB+Adj+FitFor	dolar+lık[Adj]	True
+sat+Verb+Pos^DB+Noun+Inf3+A3sg+Pnon+Nom	sat+ış[Noun]	True
+sınır+Noun+A3sg+P3sg+Acc	sınır+ını[Noun]	True
+aş+Verb+Neg^DB+Noun+Inf1+A3sg+Pnon+Nom	aş+mamak[Noun]	True
+için+Postp+PCNom	için+[Postp]	True
+,+Punc	,+[Punc]	True
+daha+Adverb	daha+[Adverb]	True
+az+Adj	az+[Adj]	True
+petrol+Noun+A3sg+Pnon+Nom	petrol+[Noun]	True
+sat+Verb+Pos^DB+Noun+Inf1+A3sg+Pnon+Nom	sat+mak[Noun]	True
+zor+Adj^DB+Noun+Zero+A3sg+P3sg+Loc	zorunt+a[Noun]	False
+kal+Verb+Pos+Fut+A3sg	kal+acak[Verb]	True
+</S>
+<S>
+bakan+Noun+A3sg+Pnon+Nom	bakan+[Noun]	True
+Çelik+Noun+Prop+A3sg+Pnon+Abl	Çelik+'ten[Noun]	True
+sendika+Noun+A3sg+Pnon+Nom^DB+Noun+Agt+A3sg+Pnon+Dat	sendika+cıya[Noun]	True
+suç+Noun+A3sg+Pnon+Nom	suç+[Noun]	True
+duyuru+Noun+A3sg+P3sg+Nom	duyuru+su[Noun]	True
+</S>
+<S>
+çalış+Verb+Pos^DB+Noun+Inf2+A3sg+Pnon+Nom	ÇALIŞMA+[Noun]	False
+ve+Conj	ve+[Conj]	True
+sosyal+Adj	sosyal+[Adj]	True
+güvenlik+Noun+A3sg+Pnon+Nom	güvenlik+[Noun]	True
+bakan+Noun+A3sg+P3sg+Nom	bakan+ı[Noun]	True
+Necati+Noun+Prop+A3sg+Pnon+Nom	necati+[Noun]	False
+Çelik+Noun+Prop+A3sg+Pnon+Nom	Çelik+[Noun]	True
+,+Punc	,+[Punc]	True
+kendi+Pron+Reflex+A3sg+P3sg+Dat	kendi+sine[Pron]	True
+hakaret+Noun+A3sg+Pnon+Nom	hakaret+[Noun]	True
+et+Verb+Pos^DB+Adj+PastPart+P3sg	et+tiği[Noun]	True
+ve+Conj	ve+[Conj]	True
+suçla+Verb+Pos^DB+Noun+Inf2+A3pl+Pnon+Loc	suçla+malarda[Noun]	True
+bulun+Verb+Pos^DB+Noun+PastPart+A3sg+P3sg+Nom	bulun+duğu[Adj]	True
+gerekçe+Noun+A3sg+P3sg+Ins	gerekçe+siyle[Noun]	True
+,+Punc	,+[Punc]	True
+Türkiye+Noun+Prop+A3sg+Pnon+Nom	türkiye+[Noun]	False
+kamu+Noun+A3sg+Pnon+Nom	kamu+[Noun]	True
+-+Punc	-+[Punc]	True
+sen+Pron+Pers+A2sg+Pnon+Nom	Sen+[Noun]	False
+genel+Adj	Genel+[Noun]	False
+başkan+Noun+A3sg+P3sg+Nom	Başkan+ı[Noun]	False
+Resul+Noun+Prop+A3sg+Pnon+Nom	Resul+[Noun]	True
+Akay+Noun+Prop+A3sg+Pnon+Nom	akay+[Noun]	False
+hak+Noun+A3sg+P3sg+Loc	hak+kında[Noun]	True
+suç+Noun+A3sg+Pnon+Nom	suç+[Noun]	True
+duyuru+Noun+A3sg+P3sg+Loc	duyurusunt+a[Noun]	False
+bulun+Verb+Pos+Past+A3sg	bulun+du[Verb]	True
+</S>
+<S>
+Çelik+Noun+Prop+A3sg+Pnon+Nom	Çelik+[Noun]	True
+,+Punc	,+[Punc]	True
+Ankara+Noun+Prop+A3sg+Pnon+Nom	Ankara+[Noun]	True
+cumhuriyet+Noun+A3sg+Pnon+Nom	Cumhuriyet+[Noun]	False
+Savcılık+Noun+Prop+A3sg+P3sg+Dat	savcı+lığı'na[Noun]	False
+ver+Verb+Pos^DB+Adj+PastPart+P3sg	ver+diği[Adj]	True
+suç+Noun+A3sg+Pnon+Nom	suç+[Noun]	True
+duyuru+Noun+A3sg+P3sg+Nom	duyuru+su[Noun]	True
+dilekçe+Noun+A3sg+P3sg+Loc	dilekçe+sinde[Noun]	True
+,+Punc	,+[Punc]	True
+Akay+Noun+Prop+A3sg+Pnon+Gen	Akay+'ın[Noun]	True
+,+Punc	,+[Punc]	True
+"+Punc	"+[Punc]	True
+yap+Verb+Pos^DB+Adj+PastPart+P3sg	yap+tığı[Adj]	True
+açıkla+Verb+Pos^DB+Noun+Inf2+A3pl+Pnon+Loc	açıkla+malarda[Noun]	True
+kendi+Pron+Reflex+A3sg+P3sg+Dat	kendi+sine[Pron]	True
+hakaret+Noun+A3sg+Pnon+Loc	hakaret+te[Noun]	True
+ve+Conj	ve+[Conj]	True
+suçla+Verb+Pos^DB+Noun+Inf2+A3pl+Pnon+Loc	suçla+malarda[Noun]	True
+bulun+Verb+Pos^DB+Noun+PastPart+A3sg+P3sg+Acc	bulun+duğunu[Noun]	True
+"+Punc	"+[Punc]	True
+ifade+Noun+A3sg+Pnon+Nom	ifade+[Noun]	True
+et+Verb+Pos+Past+A3sg	et+ti[Verb]	True
+</S>
+<S>
+suç+Noun+A3sg+Pnon+Nom	Suç+[Noun]	False
+duyuru+Noun+A3sg+P3sg+Nom	duyuru+su[Noun]	True
+üzer+Noun+A3sg+P3sg+Dat	üzer+ine[Noun]	True
+Çankaya+Noun+Prop+A3sg+Pnon+Nom	Çanka+ya[Noun]	False
+Karakol+Noun+Prop+A3sg+P3sg+Loc	karakol+u'nda[Noun]	False
+ifade+Noun+A3sg+Pnon+Nom	ifade+[Noun]	True
+ver+Verb+Pos^DB+Adj+PresPart	ver+en[Adj]	True
+Akay+Noun+Prop+A3sg+Pnon+Nom	Akay+[Noun]	True
+,+Punc	,+[Punc]	True
+Çelik+Noun+Prop+A3sg+Pnon+Dat	Çelik+'e[Noun]	True
+hakaret+Noun+A3sg+Pnon+Loc	hakaret+te[Noun]	True
+bulun+Verb+Neg^DB+Noun+PastPart+A3sg+P3sg+Acc	bulun+madığını[Noun]	True
+,+Punc	,+[Punc]	True
+eski+Adj	eski+[Adj]	True
+bir+Det	bir+[Det]	True
+sendika+Noun+A3sg+Pnon+Nom^DB+Noun+Agt+A3sg+Pnon+Nom	sendika+cı[Noun]	True
+ol+Verb+Pos^DB+Noun+Inf2+A3sg+P3sg+Abl	ol+masından[Noun]	True
+dolayı+Postp+PCAbl	dolayı+[Postp]	True
+kendi+Pron+Reflex+A3sg+P3sg+Nom	kendi+si[Pron]	True
+ile+Postp+PCNom	ile+[Postp]	True
+dost+Noun+A3sg+Pnon+Nom	dost+[Noun]	True
+ol+Verb+Pos^DB+Noun+PastPart+A3sg+P3sg+Acc	ol+duğunu[Noun]	True
+söyle+Verb+Pos+Past+A3sg	söyle+di[Verb]	True
+</S>
+<S>
+öte+Noun+A3sg+Pnon+Nom	öte+[Noun]	True
+yan+Noun+A3sg+Pnon+Abl	yan+dan[Noun]	True
+,+Punc	,+[Punc]	True
+Çelik+Noun+Prop+A3sg+Pnon+Gen	Çelik+'in[Noun]	True
+,+Punc	,+[Punc]	True
+kendi+Pron+Reflex+A3sg+P3sg+Dat	kendi+sine[Pron]	True
+hakaret+Noun+A3sg+Pnon+Nom	hakaret+[Noun]	True
+et+Verb+Pos^DB+Adj+PastPart+P3sg	et+tiği[Adj]	True
+gerekçe+Noun+A3sg+P3sg+Ins	gerekçe+siyle[Noun]	True
+Akay+Noun+Prop+A3sg+Pnon+Nom	Akay+[Noun]	True
+ile+Conj	ile+[Postp]	True
+Türkiye+Noun+Prop+A3sg+Pnon+Nom	türkiye+[Noun]	False
+kamu+Noun+A3sg+Pnon+Nom	kamu+[Noun]	True
+-+Punc	-+[Punc]	True
+sen+Pron+Pers+A2sg+Pnon+Nom	Sen+[Noun]	False
+İstanbul+Noun+Prop+A3sg+Pnon+Nom	istanbul+[Noun]	False
+temsilci+Noun+A3sg+P3sg+Nom	temsilci+si[Noun]	True
+Hanefi+Noun+Prop+A3sg+Pnon+Nom	Hanef+i[Noun]	False
+Bostancı+Noun+Prop+A3sg+Pnon+Nom	Bostancı+[Noun]	True
+hak+Noun+A3sg+P3sg+Loc	hakkınt+a[Noun]	False
+1+Num+Distrib	1+'er[Num]	True
+milyar+Num+Card	milyar+[Num]	True
+lira+Noun+A3sg+Pnon+Nom	lira+[Noun]	True
+tazminat+Noun+A3sg+Pnon+Nom	tazminat+[Noun]	True
+istem+Noun+A3sg+P3sg+Ins	istem+iyle[Noun]	True
+aç+Verb+Pos^DB+Adj+PastPart+P3sg	aç+tığı[Adj]	True
+dava+Noun+A3sg+Pnon+Gen	dava+nın[Noun]	True
+ilk+Adj	ilk+[Adj]	True
+duruşma+Noun+A3sg+P3sg+Nom	duruşma+sı[Noun]	True
+i+Verb+Pos+Cond+A3sg	i+se[Verb]	True
+11+Num+Card	11+[Num]	True
+Mart+Noun+Prop+A3sg+Pnon+Loc	mart+'ta[Noun]	False
+Ankara+Noun+Prop+A3sg+Pnon+Loc	Ankara+'da[Noun]	True
+yap+Verb^DB+Verb+Pass+Pos+Fut+A3sg	yap+ılacak[Verb]	True
+</S>
+
+
+
+<S>
+Refah+Noun+Prop+A3sg+Pnon+Gen	Refah+'ın[Noun]	True
+boy+Noun+A3sg+Pnon+Nom	boy+[Noun]	True
+hedef+Noun+A3sg+P3sg+Nom	hedef+i[Noun]	True
+rektör+Noun+A3pl+Pnon+Nom	rektör+ler[Noun]	True
+</S>
+
+<S>
+hükümet+Noun+A3sg+Pnon+Loc	hükümet+TE[Noun]	True
+türban+Noun+A3sg+Pnon+Dat	türban+a[Noun]	True
+serbest+Adj^DB+Noun+Ness+A3sg+Pnon+Nom	serbest+lik[Noun]	True
+getir+Verb+Pos^DB+Noun+Inf2+A3sg+Pnon+Nom	getir+me[Noun]	True
+girişim+Noun+A3sg+P3sg+Ins	girişim+iyle[Noun]	True
+başla+Verb+Pos^DB+Adj+PresPart	başla+yan[Adj]	True
+kriz+Noun+A3sg+Pnon+Nom	kriz+[Noun]	True
+büyü+Verb+Pos+Aor^DB+Adverb+While	büyü+rken[Adverb]	True
+,+Punc	,+[Punc]	True
+Rp+Noun+Prop+A3sg+Pnon+Loc	RP+'de[Noun]	False
+hazırla+Verb^DB+Verb+Pass+Pos^DB+Adj+PresPart	hazırla+nan[Adj]	True
+bir+Det	bir+[Det]	True
+rapor+Noun+A3sg+Pnon+Nom	rapor+[Noun]	True
+,+Punc	,+[Punc]	True
+Türkiye+Noun+Prop+A3sg+Pnon+Nom	türkiye+[Noun]	False
+çap+Noun+A3sg+P3sg+Loc^DB+Adj+Rel	çap+ındaki[Adj]	True
+61+Num+Card	61+[Num]	True
+üniversite+Noun+A3sg+Pnon+Abl	üniversite+den[Noun]	True
+yalnızca+Adverb	yalnızca+[Adverb]	True
+5+Num+Card^DB+Noun+Zero+A3sg+P3sg+Loc	5+'inde[Noun]	True
+türban+Noun+A3sg+Pnon+Nom	türban+[Noun]	True
+ve+Conj	ve+[Conj]	True
+başörtü+Noun+A3sg+P3sg+Dat	başörtü+süne[Noun]	True
+izin+Noun+A3sg+Pnon+Nom	izin+[Noun]	True
+ver+Verb^DB+Verb+Pass+Neg^DB+Noun+PastPart+A3sg+P3sg+Acc	ver+ilmediğini[Noun]	True
+orta+Noun+A3sg+Pnon+Dat	orta+ya[Noun]	True
+çık+Verb^DB+Verb+Caus+Pos+Past+A3sg	çık+ardı[Verb]	True
+</S>
+<S>
+rp+Noun+A3sg+Pnon+Nom	RP+[Noun]	False
+,+Punc	,+[Punc]	True
+yök+Noun+A3sg+Pnon+Nom	yök+[Noun]	True
+başkan+Noun+A3sg+P3sg+Nom	Başkan+ı[Noun]	False
+Kemal+Noun+Prop+A3sg+Pnon+Nom	Kemal+[Noun]	True
+Gürüz+Noun+Prop+A3sg+Pnon+Ins	gürüz+'le[Noun]	False
+birlikte+Postp+PCIns	birlikte+[Postp]	True
+türban+Noun+A3sg+Pnon+Nom	türban+[Noun]	True
+yasak+Noun+A3sg+P3sg+Nom	yasağ+ı[Noun]	False
+uygula+Verb+Pos^DB+Noun+PastPart+A3sg+P3pl+Nom	uygula+dıkları[Adj]	True
+gerekçe+Noun+A3sg+P3sg+Ins	gerekçe+siyle[Noun]	True
+odtü+Noun+A3sg+Pnon+Nom	odtü+[Noun]	True
+,+Punc	,+[Punc]	True
+Hacettepe+Noun+Prop+A3sg+Pnon+Nom	Hacettepe+[Noun]	True
+,+Punc	,+[Punc]	True
+Gazi+Noun+Prop+A3sg+Pnon+Nom	Gazi+[Noun]	True
+,+Punc	,+[Punc]	True
+İstanbul+Noun+Prop+A3sg+Pnon+Nom	İstanbul+[Noun]	True
+ve+Conj	ve+[Conj]	True
+Ege+Noun+Prop+A3sg+Pnon+Nom	Ege+[Noun]	True
+üniversite+Noun+A3pl+P3sg+Gen	üniversite+lerinin[Noun]	True
+rektör+Noun+A3pl+P3pl+Acc	rektör+lerini[Noun]	True
+hedef+Noun+A3sg+Pnon+Nom	hedef+[Noun]	True
+seç+Verb+Pos+Past+A3sg	seç+ti[Verb]	True
+</S>
+<S>
+Rp+Noun+Prop+A3sg+Pnon+Nom^DB+Adj+With	RP+'li[Noun]	False
+öğretim+Noun+A3sg+Pnon+Nom	öğretim+[Noun]	True
+üye+Noun+A3pl+P3sg+Gen	üye+lerinin[Noun]	True
+oluş+Verb^DB+Verb+Caus+Pos^DB+Adj+PastPart+P3sg	oluş+turduğu[Adj]	True
+ekonomik+Adj	ekonomik+[Adj]	True
+ve+Conj	ve+[Conj]	True
+sosyal+Adj	sosyal+[Adj]	True
+araştır+Verb+Pos^DB+Noun+Inf2+A3pl+Pnon+Nom	araştır+malar[Noun]	True
+merkez+Noun+A3sg+P3sg+Nom	merkezi+[Noun]	False
+(+Punc	(+[Punc]	True
+esam+Noun+A3sg+Pnon+Nom	esam+[Noun]	True
+)+Punc	)+[Punc]	True
+ve+Conj	ve+[Conj]	True
+gençlik+Noun+A3sg+Pnon+Nom	gençlik+[Noun]	True
+örgüt+Noun+A3sg+P3sg+Nom	örgüt+ü[Noun]	True
+milli+Adj	milli+[Noun]	True
+gençlik+Noun+A3sg+Pnon+Nom	gençlik+[Noun]	True
+Vakıf+Noun+Prop+A3sg+P3sg+Gen	vakıf+ı'nın[Noun]	False
+(+Punc	(+[Punc]	True
+mgv+Noun+A3sg+Pnon+Nom	MGV+[Noun]	False
+)+Punc	)+[Punc]	True
+ulaş+Verb^DB+Verb+Caus+Pos^DB+Adj+PastPart+P3sg	ulaş+tırdığı[Adj]	True
+bilgi+Noun+A3pl+Pnon+Ins	bilgi+lerle[Noun]	True
+hazırla+Verb^DB+Verb+Pass+Pos^DB+Adj+PresPart	hazırla+nan[Adj]	True
+"+Punc	"+[Punc]	True
+üniversite+Noun+A3pl+Pnon+Nom	üniversite+ler[Noun]	True
+ve+Conj	ve+[Conj]	True
+başörtü+Noun+A3sg+P3sg+Nom	başörtü+sü[Noun]	True
+"+Punc	"+[Punc]	True
+konu+Noun+A3sg+Pnon+Nom^DB+Adj+With	konu+lu[Adj]	True
+rapor+Noun+A3sg+Pnon+Nom	rapor+[Noun]	True
+,+Punc	,+[Punc]	True
+üniversite+Noun+A3pl+Pnon+Loc^DB+Adj+Rel	üniversite+lerdeki[Adj]	True
+türban+Noun+A3sg+Pnon+Nom	türban+[Noun]	True
+yasak+Noun+A3sg+P3sg+Gen	yasağının+[Noun]	False
+Rp+Noun+Prop+A3sg+Pnon+Gen	RP+'nin[Noun]	False
+savun+Verb+Pos^DB+Adj+PastPart+P3sg	savun+duğu[Adj]	True
+yaygın+Adj^DB+Noun+Ness+A3sg+Pnon+Loc	yaygın+lıkta[Noun]	True
+ol+Verb+Neg^DB+Noun+PastPart+A3sg+P3sg+Acc	ol+madığını[Noun]	True
+orta+Noun+A3sg+Pnon+Dat	orta+ya[Noun]	True
+koy+Verb+Pos+Past+A3sg	koy+du[Verb]	True
+</S>
+<S>
+rapor+Noun+A3sg+Pnon+Loc	rapor+da[Noun]	True
+,+Punc	,+[Punc]	True
+türban+Noun+A3sg+Pnon+Nom	türban+[Noun]	True
+ve+Conj	ve+[Conj]	True
+başörtü+Noun+A3sg+P3sg+Nom	başörtü+sü[Noun]	True
+yasak+Noun+A3sg+P3sg+Gen	yasağ+ının[Noun]	False
+uygula+Verb^DB+Verb+Pass+Pos^DB+Adj+PastPart+P3sg	uygula+ndığı[Adj]	True
+bu+Det	bu+[Det]	True
+üniversite+Noun+A3pl+Pnon+Gen	üniversite+lerin[Noun]	True
+en+Adverb	en+[Adverb]	True
+fazla+Adj	fazla+[Adj]	True
+öğrenci+Noun+A3sg+Pnon+Dat	öğrenci+ye[Noun]	True
+sahip+Noun+A3sg+Pnon+Nom	sahip+[Noun]	True
+ol+Verb+Pos^DB+Noun+Inf2+A3sg+P3pl+Dat	ol+malarına[Noun]	True
+da+Conj	da+[Conj]	True
+dikkat+Noun+A3sg+Pnon+Nom	dikkat+[Noun]	True
+çek+Verb^DB+Verb+Pass+Pos+Past+A3sg	çek+ildi[Verb]	True
+</S>
+<S>
+rapor+Noun+A3sg+Pnon+Loc	rapor+da[Noun]	True
+Tbmm+Noun+Prop+A3sg+Pnon+Loc	tbmm+'de[Noun]	False
+önce+Noun+A3sg+Pnon+Nom^DB+Adj+Rel	önce+ki[Adj]	True
+gün+Noun+A3sg+Pnon+Nom	gün+[Noun]	True
+yök+Noun+A3sg+Pnon+Nom	yök+[Noun]	True
+yasa+Noun+A3sg+P3sg+Loc	yasa+sında[Noun]	True
+sağla+Verb^DB+Verb+Pass+Pos^DB+Adj+PresPart	sağla+nan[Adj]	True
+değişik+Adj^DB+Noun+Ness+A3sg+Pnon+Abl	değişik+likten[Noun]	True
+sonra+Postp+PCAbl	sonra+[Postp]	True
+,+Punc	,+[Punc]	True
+yök+Noun+A3sg+Pnon+Nom	yök+[Noun]	True
+başkan+Noun+A3sg+P3sg+Nom	Başkan+ı[Noun]	False
+profesör+Noun+A3sg+Pnon+Nom	prof.+[Noun]	False
+doktor+Noun+A3sg+Pnon+Nom	dr.+[Noun]	False
+Kemal+Noun+Prop+A3sg+Pnon+Nom	Kemal+[Noun]	True
+Gürüz+Noun+Prop+A3sg+Pnon+Ins	gürüz+'le[Noun]	False
+birlikte+Postp+PCIns	birlikte+[Postp]	True
+odtü+Noun+A3sg+Pnon+Nom	odtü+[Noun]	True
+rektör+Noun+A3sg+P3sg+Nom	Rektör+ü[Noun]	False
+profesör+Noun+A3sg+Pnon+Nom	prof.+[Noun]	False
+doktor+Noun+A3sg+Pnon+Nom	dr.+[Noun]	False
+Süha+Noun+Prop+A3sg+Pnon+Nom	süha+[Noun]	False
+Sevük+Noun+Prop+A3sg+Pnon+Nom	Sevük+[Noun]	True
+,+Punc	,+[Punc]	True
+Hacettepe+Noun+Prop+A3sg+Pnon+Nom	Hacettepe+[Noun]	True
+üniversite+Noun+A3sg+P3sg+Nom	üniversite+si[Noun]	True
+rektör+Noun+A3sg+P3sg+Nom	Rektör+ü[Noun]	False
+profesör+Noun+A3sg+Pnon+Nom	prof.+[Noun]	False
+doktor+Noun+A3sg+Pnon+Nom	dr.+[Noun]	False
+Yüksel+Noun+Prop+A3sg+Pnon+Nom	Yüksel+[Noun]	True
+Bozer+Noun+Prop+A3sg+Pnon+Nom	bozer+[Noun]	False
+,+Punc	,+[Punc]	True
+Gazi+Noun+Prop+A3sg+Pnon+Nom	Gazi+[Noun]	True
+üniversite+Noun+A3sg+P3sg+Nom	üniversite+si[Noun]	True
+rektör+Noun+A3sg+P3sg+Nom	Rektör+ü[Noun]	False
+profesör+Noun+A3sg+Pnon+Nom	prof.+[Noun]	False
+doktor+Noun+A3sg+Pnon+Nom	dr.+[Noun]	False
+Enver+Noun+Prop+A3sg+Pnon+Nom	Enver+[Noun]	True
+hasanoğlu+Noun+A3sg+Pnon+Nom	hasanoğlu+[Noun]	True
+,+Punc	,+[Punc]	True
+İstanbul+Noun+Prop+A3sg+Pnon+Nom	istanbul+[Noun]	False
+üniversite+Noun+A3sg+P3sg+Nom	üniversite+si[Noun]	True
+rektör+Noun+A3sg+P3sg+Nom	Rektör+ü[Noun]	False
+profesör+Noun+A3sg+Pnon+Nom	prof.+[Noun]	False
+doktor+Noun+A3sg+Pnon+Nom	dr.+[Noun]	False
+Bülent+Noun+Prop+A3sg+Pnon+Nom	Bülent+[Noun]	True
+Berkarda+Noun+Prop+A3sg+Pnon+Nom	Berkar+da[Noun]	False
+ve+Conj	ve+[Conj]	True
+Ege+Noun+Prop+A3sg+Pnon+Nom	Ege+[Noun]	True
+üniversite+Noun+A3sg+P3sg+Nom	üniversite+si[Noun]	True
+rektör+Noun+A3sg+P3sg+Nom	Rektör+ü[Noun]	False
+profesör+Noun+A3sg+Pnon+Nom	prof.+[Noun]	False
+doktor+Noun+A3sg+Pnon+Nom	dr.+[Noun]	False
+Rafet+Noun+Prop+A3sg+Pnon+Nom	rafet+[Noun]	False
+Saygılı+Noun+Prop+A3sg+Pnon+Gen	saygıl+ı'nın[Noun]	False
+,+Punc	,+[Punc]	True
+mutlaka+Adverb	mutlaka+[Adverb]	True
+görev+Noun+A3sg+Pnon+Abl	görev+den[Noun]	True
+al+Verb^DB+Verb+Pass+Pos^DB+Noun+Inf2+A3pl+P3pl+Nom	alın+maları[Noun]	False
+iste+Verb^DB+Verb+Pass+Pos+Past+A3sg	iste+ndi[Verb]	True
+</S>
+<S>
+tepki+Noun+A3pl+Pnon+Nom	tepkile+R[Noun]	False
+</S>
+<S>
+Refah+Noun+Prop+A3sg+Pnon+Nom	refah+[Noun]	False
+Parti+Noun+Prop+A3sg+P3sg+Gen	Parti+si'nin[Noun]	True
+üniversite+Noun+A3pl+Pnon+Loc	üniversite+lerde[Noun]	True
+türban+Noun+A3sg+Pnon+Acc	türban+ı[Noun]	True
+serbest+Adj	serbest+[Adj]	True
+bırak+Verb+Pos^DB+Noun+Inf2+A3sg+Pnon+Nom	bırak+ma[Noun]	True
+girişim+Noun+A3pl+P3sg+Dat	girişim+lerine[Noun]	True
+Ankara+Noun+Prop+A3sg+Pnon+Loc^DB+Adj+Rel	Ankara+'daki[Adj]	True
+4+Num+Card	4+[Num]	True
+üniversite+Noun+A3sg+Pnon+Gen	üniversite+nin[Noun]	True
+tıb+Noun+A3sg+Pnon+Nom	tıp+[Adverb]	False
+fakülte+Noun+A3pl+P3sg+Abl	fakülte+lerinden[Noun]	True
+büyük+Adj	büyük+[Adj]	True
+tepki+Noun+A3sg+Pnon+Nom	tepki+[Noun]	True
+gel+Verb+Pos+Past+A3sg	gel+di[Verb]	True
+</S>
+<S>
+Ankara+Noun+Prop+A3sg+Pnon+Nom	Ankara+[Noun]	True
+,+Punc	,+[Punc]	True
+başkent+Noun+A3sg+Pnon+Nom	Başkent+[Noun]	False
+,+Punc	,+[Punc]	True
+Hacettepe+Noun+Prop+A3sg+Pnon+Nom	Hacettepe+[Noun]	True
+ve+Conj	ve+[Conj]	True
+Gazi+Noun+Prop+A3sg+Pnon+Nom	Gazi+[Noun]	True
+üniversite+Noun+A3pl+P3pl+Nom	üniversite+leri[Noun]	True
+tıb+Noun+A3sg+Pnon+Nom	tıp+[Adverb]	False
+fakülte+Noun+A3pl+P3sg+Nom	fakülte+leri[Noun]	True
+öğretim+Noun+A3sg+Pnon+Nom	öğretim+[Noun]	True
+üye+Noun+A3pl+P3sg+Gen	üye+lerinin[Noun]	True
+imza+Noun+A3sg+P3sg+Ins	imza+sıyla[Noun]	True
+dün+Noun+A3sg+Pnon+Nom	dün+[Noun]	True
+yap+Verb^DB+Verb+Pass+Pos^DB+Adj+PresPart	yap+ılan[Adj]	True
+yazılı+Noun+A3sg+Pnon+Nom	yazılı+[Noun]	True
+açıkla+Verb+Pos^DB+Noun+Inf2+A3sg+Pnon+Loc	açıkla+mada[Noun]	True
+,+Punc	,+[Punc]	True
+bu+Det	bu+[Det]	True
+girişim+Noun+A3pl+Pnon+Gen	girişim+lerin[Noun]	True
+cumhuriyet+Noun+A3sg+P3sg+Nom	Cumhuriyet+i[Noun]	False
+temel+Noun+A3sg+Pnon+Abl	temel+den[Noun]	True
+yık+Verb+Pos^DB+Noun+Inf2+A3sg+Pnon+Dat	yık+maya[Noun]	True
+yönelik+Postp+PCDat	yönelik+[Postp]	True
+boyut+Noun+A3pl+Pnon+Dat	boyut+lara[Noun]	True
+ulaş+Verb+Pos^DB+Adj+PastPart+P3sg	ulaş+tığı[Adj]	True
+ifade+Noun+A3sg+Pnon+Nom	ifade+[Noun]	True
+et+Verb^DB+Verb+Pass+Pos+Past+A3sg	ed+ildi[Verb]	False
+</S>
+<S>
+açıkla+Verb+Pos^DB+Noun+Inf2+A3sg+Pnon+Loc	açıkla+mada[Noun]	True
+,+Punc	,+[Punc]	True
+insan+Noun+A3sg+Pnon+Nom	insan+[Noun]	True
+hak+Noun+A3pl+P3sg+Gen	hak+larının[Noun]	True
+arka+Noun+A3sg+P3sg+Dat	arka+sına[Noun]	True
+sığın+Verb^DB+Verb+Pass+Pos^DB+Adverb+ByDoingSo	sığın+ılarak[Adverb]	True
+yürü+Verb^DB+Verb+Caus^DB+Verb+Pass+Pos^DB+Adj+PresPart	yürü+tülen[Adj]	True
+bu+Det	bu+[Det]	True
+çalış+Verb+Pos^DB+Noun+Inf2+A3pl+Pnon+Gen	çalış+maların[Noun]	True
+en+Adverb	en+[Adverb]	True
+somut+Adj	somut+[Adj]	True
+örnek+Noun+A3sg+P3sg+Gen	örneğinin+[Noun]	False
+kıyafet+Noun+A3sg+Pnon+Nom	kıyafet+[Noun]	True
+devrim+Noun+A3pl+P3sg+Dat	devrim+lerine[Noun]	True
+aykırı+Adj	aykırı+[Adj]	True
+düzenle+Verb+Pos^DB+Noun+Inf2+A3pl+Pnon+Nom	düzenle+meler[Noun]	True
+ol+Verb+Pos^DB+Noun+PastPart+A3sg+P3sg+Dat	ol+duğuna[Noun]	True
+dikkat+Noun+A3sg+Pnon+Nom	dikkat+[Noun]	True
+çek+Verb^DB+Verb+Pass+Pos+Past+A3sg	çek+ildi[Verb]	True
+</S>
+
