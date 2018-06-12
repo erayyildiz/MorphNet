@@ -303,7 +303,10 @@ class TrMorphTagger(object):
         for gold_sequence, context_representation, word_representation \
                 in zip(gold_sequences, context_representations, word_representations):
 
-            output_encoder_output = word_representations + tag_rnn_state.output()
+            if tag_rnn_state.output():
+                output_encoder_output = word_representation + tag_rnn_state.output()
+            else:
+                output_encoder_output = word_representation
 
             rnn_state = self.DEC_RNN.initial_state().set_s([context_representation, dy.tanh(context_representation),
                                                             output_encoder_output, dy.tanh(output_encoder_output)])
@@ -313,7 +316,7 @@ class TrMorphTagger(object):
                 probs.append(p)
 
             for gold_i in gold_sequence:
-                tag_embedding = self.CHARS_LOOKUP(self.char2id[gold_i])
+                tag_embedding = self.CHARS_LOOKUP[self.char2id[gold_i]]
                 tag_rnn_state.add_input(tag_embedding)
 
             losses += [-dy.log(dy.pick(p, self.char2id[output_char])) for p, output_char in zip(probs, gold_sequence)]
@@ -329,10 +332,15 @@ class TrMorphTagger(object):
         word_representations = self._get_word_representations(surface_words)
 
         predicted_sequences = []
+        tag_rnn_state = self.tag_rnn.initial_state()
         for context_representation, word_representation in zip(context_representations, word_representations):
+            if tag_rnn_state.output():
+                output_encoder_output = word_representation + tag_rnn_state.output()
+            else:
+                output_encoder_output = word_representation
             predicted_sequence = []
             rnn_state = self.DEC_RNN.initial_state().set_s([context_representation, dy.tanh(context_representation),
-                                                            word_representation, dy.tanh(word_representation)])
+                                                            output_encoder_output, dy.tanh(output_encoder_output)])
             predicted_char = TrMorphTagger.SENTENCE_BEGIN_TAG
             while True:
                 rnn_state = rnn_state.add_input(self.CHARS_LOOKUP[self.char2id[predicted_char]])
@@ -342,6 +350,9 @@ class TrMorphTagger(object):
                     break
                 else:
                     predicted_sequence.append(predicted_char)
+            for seq_i in predicted_sequence:
+                tag_embedding = self.CHARS_LOOKUP[self.char2id[seq_i]]
+                tag_rnn_state.add_input(tag_embedding)
             predicted_sequences.append(predicted_sequence)
         return TrMorphTagger._convert_to_morph_analyzer_form(predicted_sequences)
 
@@ -433,9 +444,9 @@ class TrMorphTagger(object):
 if __name__ == "__main__":
     disambiguator = TrMorphTagger(train_from_scratch=True,
                                   train_data_path="data/data.train.txt",
-                                  # test_data_paths=["data/data.train.txt"],
-                                  test_data_paths=[
-                                      "data/data.test.txt",
-                                      "data/test.merge",
-                                      "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
+                                  test_data_paths=["data/data.train.txt"],
+                                  # test_data_paths=[
+                                  #     "data/data.test.txt",
+                                  #     "data/test.merge",
+                                  #     "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
                                   model_file_name="encoder_decoder_morph_tagger")
