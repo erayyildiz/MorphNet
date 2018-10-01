@@ -14,7 +14,7 @@ logger = logging.getLogger(__file__)
 class TrMorphTagger(object):
 
     # HYPER-PARAMETERS
-    LSTM_NUM_OF_LAYERS = 2
+    LSTM_NUM_OF_LAYERS = 1
     EMBEDDINGS_SIZE = 16
     OUTPUT_EMBEDDINGS_SIZE = 32
     STATE_SIZE = 64
@@ -118,18 +118,10 @@ class TrMorphTagger(object):
                                                TrMorphTagger.STATE_SIZE, self.model)
 
             self.dec_lstm = dy.LSTMBuilder(TrMorphTagger.LSTM_NUM_OF_LAYERS,
-                                           TrMorphTagger.STATE_SIZE * 2 + TrMorphTagger.OUTPUT_EMBEDDINGS_SIZE,
-                                           TrMorphTagger.STATE_SIZE, self.model)
+                                           TrMorphTagger.OUTPUT_EMBEDDINGS_SIZE,
+                                           TrMorphTagger.STATE_SIZE * 2, self.model)
 
-            self.attention_w1 = self.model.add_parameters((
-                TrMorphTagger.ATTENTION_SIZE, TrMorphTagger.STATE_SIZE * 2
-            ))
-            self.attention_w2 = self.model.add_parameters(
-                (TrMorphTagger.ATTENTION_SIZE, TrMorphTagger.STATE_SIZE * TrMorphTagger.LSTM_NUM_OF_LAYERS * 2)
-            )
-            self.attention_v = self.model.add_parameters((1, TrMorphTagger.ATTENTION_SIZE))
-
-            self.decoder_w = self.model.add_parameters((len(self.output_char2id), TrMorphTagger.STATE_SIZE))
+            self.decoder_w = self.model.add_parameters((len(self.output_char2id), TrMorphTagger.STATE_SIZE * 2))
             self.decoder_b = self.model.add_parameters((len(self.output_char2id)))
 
             self.train_model(model_name=model_file_name, num_epoch=10000)
@@ -162,7 +154,7 @@ class TrMorphTagger(object):
         else:
             return self.split_root_tags_regex.sub(r"\2", analysis)
 
-    def load_data(self, file_path, max_sentence=1):
+    def load_data(self, file_path, max_sentence=10000000):
         logger.info("Loading data from {}".format(file_path))
         sentence = []
         sentences = []
@@ -207,41 +199,24 @@ class TrMorphTagger(object):
         fwd_vectors = self._run_rnn(fwd_rnn, word_reps)
         bwd_rnn = self.enc_bwd_lstm.initial_state()
         bwd_vectors = self._run_rnn(bwd_rnn, list(reversed(word_reps)))
-        bwd_vectors = list(reversed(bwd_vectors))
-        vectors = [dy.concatenate(list(p)) for p in zip(fwd_vectors, bwd_vectors)]
-        return vectors
+        return dy.concatenate([fwd_vectors[0], bwd_vectors[-1]])
 
-    def attend(self, input_mat, state, w1dt):
-        w2 = dy.parameter(self.attention_w2)
-        v = dy.parameter(self.attention_v)
-        w2dt = w2 * dy.concatenate(list(state.s()))
-        unnormalized = dy.transpose(v * dy.tanh(dy.colwise_add(w1dt, w2dt)))
-        att_weights = dy.softmax(unnormalized)
-        # context: (encoder_state)
-        context = input_mat * att_weights
-        return context
+    def decode(self, word_rep, output):
+        w = dy.parameter(self.decoder_w)
+        b = dy.parameter(self.decoder_b)
 
-    def decode(self, vectors, output):
         output = list(output) + [self.EOS]
         output = self._encode(output, self.output_char2id)
 
-        w = dy.parameter(self.decoder_w)
-        b = dy.parameter(self.decoder_b)
-        w1 = dy.parameter(self.attention_w1)
-        input_mat = dy.concatenate_cols(vectors)
-        w1dt = None
-
         last_output_embeddings = self.OUTPUT_LOOKUP[self.output_char2id[TrMorphTagger.EOS]]
-        decoder_lstm = self.dec_lstm.initial_state()
-        decoder_lstm = decoder_lstm.add_input(dy.concatenate([
-            dy.vecInput(TrMorphTagger.STATE_SIZE * 2), last_output_embeddings]))
+        decoder_lstm = self.dec_lstm.initial_state().set_s([dy.tanh(word_rep),
+                                                            dy.tanh(word_rep)])
+
+        decoder_lstm = decoder_lstm.add_input(last_output_embeddings)
         losses = []
 
         for ch in output:
-            # w1dt can be computed and cached once for the entire decoding phase
-            w1dt = w1dt or w1 * input_mat
-            vector = dy.concatenate([self.attend(input_mat, decoder_lstm, w1dt), last_output_embeddings])
-            decoder_lstm = decoder_lstm.add_input(vector)
+            decoder_lstm = decoder_lstm.add_input(last_output_embeddings)
             out_vector = w * decoder_lstm.output() + b
             probs = dy.softmax(out_vector)
             last_output_embeddings = self.OUTPUT_LOOKUP[ch]
@@ -251,28 +226,23 @@ class TrMorphTagger(object):
     def generate(self, word):
         dy.renew_cg()
         embedded = self._embed(word, self.CHARS_LOOKUP)
-        encoded = self._get_word_representations(embedded)
+        word_rep = self._get_word_representations(embedded)
 
         w = dy.parameter(self.decoder_w)
         b = dy.parameter(self.decoder_b)
-        w1 = dy.parameter(self.attention_w1)
-        input_mat = dy.concatenate_cols(encoded)
-        w1dt = None
 
         last_output_embeddings = self.OUTPUT_LOOKUP[self.output_char2id[TrMorphTagger.EOS]]
-        decoder_lstm = self.dec_lstm.initial_state()
-        decoder_lstm = decoder_lstm.add_input(dy.concatenate([
-            dy.vecInput(TrMorphTagger.STATE_SIZE * 2), last_output_embeddings]))
+        decoder_lstm = self.dec_lstm.initial_state().set_s([dy.tanh(word_rep),
+                                                            dy.tanh(word_rep)])
+
+        decoder_lstm = decoder_lstm.add_input(last_output_embeddings)
 
         out = []
         count_eos = 0
         for i in range(len(word) * 3):
             if count_eos == 1:
                 break
-            # w1dt can be computed and cached once for the entire decoding phase
-            w1dt = w1dt or w1 * input_mat
-            vector = dy.concatenate([self.attend(input_mat, decoder_lstm, w1dt), last_output_embeddings])
-            decoder_lstm = decoder_lstm.add_input(vector)
+            decoder_lstm = decoder_lstm.add_input(last_output_embeddings)
             out_vector = w * decoder_lstm.output() + b
             probs = dy.softmax(out_vector).vec_value()
             next_char = probs.index(max(probs))
@@ -384,10 +354,10 @@ class TrMorphTagger(object):
 if __name__ == "__main__":
     disambiguator = TrMorphTagger(train_from_scratch=True,
                                   train_data_path="data/data.train.txt",
-                                  test_data_paths=["data/data.train.txt"],
-                                  dev_data_path="data/data.train.txt",
-                                  # test_data_paths=[
-                                  #     "data/data.test.txt",
-                                  #     "data/test.merge",
-                                  #     "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
+                                  # test_data_paths=["data/data.train.txt"],
+                                  dev_data_path="data/data.dev.txt",
+                                  test_data_paths=[
+                                      "data/data.test.txt",
+                                      "data/test.merge",
+                                      "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
                                   model_file_name="encoder_decoder_morph_tagger")
