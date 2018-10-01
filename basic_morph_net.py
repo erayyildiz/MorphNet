@@ -15,10 +15,9 @@ class TrMorphTagger(object):
 
     # HYPER-PARAMETERS
     LSTM_NUM_OF_LAYERS = 1
-    EMBEDDINGS_SIZE = 16
-    OUTPUT_EMBEDDINGS_SIZE = 32
-    STATE_SIZE = 64
-    ATTENTION_SIZE = 64
+    EMBEDDINGS_SIZE = 32
+    OUTPUT_EMBEDDINGS_SIZE = 64
+    STATE_SIZE = 128
 
     # STATIC VARIABLES
     EOS = "<s>"
@@ -62,7 +61,7 @@ class TrMorphTagger(object):
         return [vocab[token] for token in tokens if token in vocab]
 
     def _embed(self, token, char_embedding_table):
-        return [char_embedding_table[self.char2id[ch]] for ch in token]
+        return [char_embedding_table[ch] for ch in token]
 
     @staticmethod
     def lower(text):
@@ -342,7 +341,7 @@ class TrMorphTagger(object):
                 predicted_label = self.generate(word.surface_word)
                 gold_label = word.roots[0] + "+" + "+".join(word.tags[0])
                 gold_label = gold_label.replace("+DB", "^DB")
-                logger.info(gold_label + " <==> " + predicted_label)
+                # logger.info(gold_label + " <==> " + predicted_label)
                 if gold_label == predicted_label:
                     corrects += 1
                 if len(word.roots) == 1:

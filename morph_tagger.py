@@ -6,7 +6,6 @@ import dynet as dy
 from datetime import datetime
 import pickle
 import logging.config
-import numpy as np
 
 logging.config.fileConfig('resources/logging.ini')
 logger = logging.getLogger(__file__)
@@ -15,13 +14,13 @@ logger = logging.getLogger(__file__)
 class TrMorphTagger(object):
 
     # HYPER-PARAMETERS
-    CHAR_EMBEDDING_SIZE = 64
-    ENC_STATE_SIZE = 512
-    DEC_STATE_SIZE = 256
+    LSTM_NUM_OF_LAYERS = 2
+    EMBEDDINGS_SIZE = 64
+    OUTPUT_EMBEDDINGS_SIZE = 256
+    STATE_SIZE = 512
 
     # STATIC VARIABLES
-    SENTENCE_BEGIN_TAG = "<s>"
-    SENTENCE_END_TAG = "</s>"
+    EOS = "<s>"
 
     # COMPILED REGEX PATTERNS
     analysis_regex = re.compile(r"^([^\\+]*)\+(.+)$", re.UNICODE)
@@ -35,11 +34,11 @@ class TrMorphTagger(object):
     def _create_vocab(cls, sentences):
         logger.info("Building Vocabulary...")
         char2id = dict()
-        char2id["<"] = len(char2id)
-        char2id["/"] = len(char2id)
-        char2id[">"] = len(char2id)
-        char2id[TrMorphTagger.SENTENCE_BEGIN_TAG] = len(char2id)
-        char2id[TrMorphTagger.SENTENCE_END_TAG] = len(char2id)
+        char2id[TrMorphTagger.EOS] = len(char2id)
+        output_char2id = dict()
+        output_char2id[TrMorphTagger.EOS] = len(output_char2id)
+        tag2id = dict()
+        tag2id[TrMorphTagger.EOS] = len(tag2id)
         for sentence in sentences:
             for word in sentence:
                 for ch in word.surface_word:
@@ -49,13 +48,17 @@ class TrMorphTagger(object):
                     for ch in root:
                         if ch not in char2id:
                             char2id[ch] = len(char2id)
+                        if ch not in output_char2id:
+                            output_char2id[ch] = len(output_char2id)
                 for tags in word.tags:
                     for tag in tags:
-                        if tag not in char2id:
-                            char2id[tag] = len(char2id)
-        id2char = {v: k for k, v in char2id.items()}
+                        if tag not in output_char2id:
+                            output_char2id[tag] = len(output_char2id)
+                        if tag not in tag2id:
+                            tag2id[tag] = len(tag2id)
+        id2char = {v: k for k, v in output_char2id.items()}
         logger.info("Done.")
-        return char2id, id2char
+        return char2id, output_char2id, tag2id, id2char
 
     @classmethod
     def _encode(cls, tokens, vocab):
@@ -86,7 +89,7 @@ class TrMorphTagger(object):
             for test_path in self.test_paths:
                 self.tests.append(self.load_data(test_path))
 
-            self.char2id, self.id2char = self._create_vocab(self.train)
+            self.char2id, self.output_char2id, self.tag2id, self.id2char = self._create_vocab(self.train)
 
             if not self.dev:
                 train_size = int(math.floor(0.99 * len(self.train)))
@@ -94,53 +97,58 @@ class TrMorphTagger(object):
                 self.train = self.train[:train_size]
 
             self.model = dy.Model()
-            self.trainer = dy.SimpleSGDTrainer(self.model, learning_rate=1.6)
+            self.trainer = dy.AdamTrainer(self.model)
             self.CHARS_LOOKUP = self.model.add_lookup_parameters((len(self.char2id),
-                                                                  TrMorphTagger.CHAR_EMBEDDING_SIZE))
+                                                                  TrMorphTagger.EMBEDDINGS_SIZE))
+
+            self.OUTPUT_LOOKUP = self.model.add_lookup_parameters((len(self.output_char2id),
+                                                                   TrMorphTagger.OUTPUT_EMBEDDINGS_SIZE))
+
+            self.TAG_LOOKUP = self.model.add_lookup_parameters((len(self.tag2id),
+                                                                TrMorphTagger.EMBEDDINGS_SIZE))
 
             self.individual_word_rnn = dy.LSTMBuilder(1,
-                                                      TrMorphTagger.CHAR_EMBEDDING_SIZE,
-                                                      TrMorphTagger.ENC_STATE_SIZE,
+                                                      TrMorphTagger.EMBEDDINGS_SIZE,
+                                                      TrMorphTagger.STATE_SIZE,
                                                       self.model)
             self.individual_word_rnn.set_dropout(0.3)
 
             self.tag_rnn = dy.LSTMBuilder(1,
-                                          TrMorphTagger.CHAR_EMBEDDING_SIZE,
-                                          TrMorphTagger.ENC_STATE_SIZE,
+                                          TrMorphTagger.EMBEDDINGS_SIZE,
+                                          TrMorphTagger.STATE_SIZE,
                                           self.model)
             self.tag_rnn.set_dropout(0.3)
 
             self.surface_rnn = dy.LSTMBuilder(1,
-                                              TrMorphTagger.CHAR_EMBEDDING_SIZE,
-                                              TrMorphTagger.ENC_STATE_SIZE,
+                                              TrMorphTagger.EMBEDDINGS_SIZE,
+                                              TrMorphTagger.STATE_SIZE,
                                               self.model)
             self.surface_rnn.set_dropout(0.3)
 
             self.fwd_context_rnn = dy.LSTMBuilder(1,
-                                                  TrMorphTagger.ENC_STATE_SIZE,
-                                                  TrMorphTagger.ENC_STATE_SIZE,
+                                                  TrMorphTagger.STATE_SIZE,
+                                                  TrMorphTagger.STATE_SIZE,
                                                   self.model)
             self.fwd_context_rnn.set_dropout(0.3)
 
             self.bwd_context_rnn = dy.LSTMBuilder(1,
-                                                  TrMorphTagger.ENC_STATE_SIZE,
-                                                  TrMorphTagger.ENC_STATE_SIZE,
+                                                  TrMorphTagger.STATE_SIZE,
+                                                  TrMorphTagger.STATE_SIZE,
                                                   self.model)
             self.bwd_context_rnn.set_dropout(0.3)
 
-            self.DEC_RNN = dy.LSTMBuilder(2,
-                                          TrMorphTagger.CHAR_EMBEDDING_SIZE,
-                                          TrMorphTagger.ENC_STATE_SIZE,
+            self.DEC_RNN = dy.LSTMBuilder(TrMorphTagger.LSTM_NUM_OF_LAYERS,
+                                          TrMorphTagger.OUTPUT_EMBEDDINGS_SIZE,
+                                          TrMorphTagger.STATE_SIZE,
                                           self.model)
             self.DEC_RNN.set_dropout(0.3)
 
-            # context fully connected layer
-            self.context_w = self.model.add_parameters((TrMorphTagger.ENC_STATE_SIZE, TrMorphTagger.ENC_STATE_SIZE * 2))
-            self.context_b = self.model.add_parameters(TrMorphTagger.ENC_STATE_SIZE)
+            self.context_w = self.model.add_parameters((TrMorphTagger.STATE_SIZE, TrMorphTagger.STATE_SIZE * 2))
+            self.context_b = self.model.add_parameters(TrMorphTagger.STATE_SIZE)
 
             # project the rnn output to a vector of VOCAB_SIZE length
-            self.output_w = self.model.add_parameters((len(self.char2id), TrMorphTagger.ENC_STATE_SIZE))
-            self.output_b = self.model.add_parameters((len(self.char2id)))
+            self.output_w = self.model.add_parameters((len(self.output_char2id), TrMorphTagger.STATE_SIZE))
+            self.output_b = self.model.add_parameters((len(self.output_char2id)))
 
             self.train_model(model_name=model_file_name)
         else:
@@ -172,7 +180,7 @@ class TrMorphTagger(object):
         else:
             return self.split_root_tags_regex.sub(r"\2", analysis)
 
-    def load_data(self, file_path, max_sentence=10):
+    def load_data(self, file_path, max_sentence=1):
         logger.info("Loading data from {}".format(file_path))
         sentence = []
         sentences = []
@@ -208,12 +216,9 @@ class TrMorphTagger(object):
     def _run_rnn(init_state, input_vecs):
         s = init_state
 
-        out_vectors = []
-        for vector in input_vecs:
-            s = s.add_input(vector)
-            out_vector = s.output()
-            out_vectors.append(out_vector)
-        return out_vectors
+        states = s.add_inputs(input_vecs)
+        rnn_outputs = [s.output() for s in states]
+        return rnn_outputs
 
     def _get_word_representations(self, words):
         word_representations = []
@@ -254,19 +259,7 @@ class TrMorphTagger(object):
         # concatanate the foreward and backword outputs
         context_representations = []
         for i in range(len(fwd_context)):
-            if i == 0:
-                context_representations.append(dy.concatenate([bwd_context[0],
-                                                              dy.zeroes(TrMorphTagger.ENC_STATE_SIZE)]))
-            elif i + 1 == len(fwd_context):
-                context_representations.append(dy.concatenate([fwd_context[-1],
-                                                              dy.zeroes(TrMorphTagger.ENC_STATE_SIZE)]))
-            else:
-                context_representations.append(dy.concatenate([fwd_context[i-1],
-                                                              bwd_context[i+1]]))
-        # context_representations = [dy.concatenate([fwd_out, bwd_out])
-        #                            for fwd_out, bwd_out in zip(fwd_context, bwd_context)]
-        context_representations = [dy.rectify(w * context_representation + b)
-                                   for context_representation in context_representations]
+            context_representations.append(dy.rectify(w * dy.concatenate([fwd_context[i], bwd_context[i]]) + b))
 
         return context_representations
 
@@ -280,15 +273,11 @@ class TrMorphTagger(object):
         text = text.replace("Ö", "ö")
         return text.lower()
 
-    def _get_probs(self, rnn_output):
-        output_w = dy.parameter(self.output_w)
-        output_b = dy.parameter(self.output_b)
-
-        probs = dy.softmax(output_w * rnn_output + output_b)
-        return probs
-
     def get_loss(self, sentence):
         dy.renew_cg()
+        w = dy.parameter(self.output_w)
+        b = dy.parameter(self.output_b)
+
         surface_words = [word.surface_word for word in sentence]
         if not self.case_sensitive:
             surface_words = [TrMorphTagger.lower(word) for word in surface_words]
@@ -302,38 +291,40 @@ class TrMorphTagger(object):
 
         tag_sequences = [word.tags[0] for word in sentence]
 
-        gold_sequences = [[TrMorphTagger.SENTENCE_BEGIN_TAG] + list(root) + tags + [TrMorphTagger.SENTENCE_END_TAG]
+        gold_sequences = [list(root) + tags + [TrMorphTagger.EOS]
                           for root, tags in zip(root_char_sequences, tag_sequences)]
 
-        probs = []
         losses = []
-        tag_rnn_state = self.tag_rnn.initial_state()
-        for gold_sequence, context_representation, word_representation \
-                in zip(gold_sequences, context_representations, word_representations):
+        tag_rnn_state = self.tag_rnn.initial_state().add_input(self.TAG_LOOKUP[self.tag2id[TrMorphTagger.EOS]])
+        for gold_sequence, tags, context_representation, word_representation \
+                in zip(gold_sequences, tag_sequences, context_representations, word_representations):
 
-            if tag_rnn_state.output():
-                output_encoder_output = word_representation + tag_rnn_state.output()
-            else:
-                output_encoder_output = word_representation
+            output_encoder_output = word_representation + tag_rnn_state.output()
 
-            rnn_state = self.DEC_RNN.initial_state().set_s([dy.tanh(context_representation),
-                                                            dy.tanh(context_representation),
-                                                            dy.tanh(output_encoder_output),
-                                                            dy.tanh(output_encoder_output)])
+            last_output_embeddings = self.OUTPUT_LOOKUP[self.output_char2id[TrMorphTagger.EOS]]
+            rnn_state = self.DEC_RNN.initial_state().set_s([output_encoder_output,
+                                                            output_encoder_output,
+                                                            context_representation,
+                                                            context_representation])
             for gold_i in gold_sequence:
-                rnn_state = rnn_state.add_input(self.CHARS_LOOKUP[self.char2id[gold_i]])
-                p = self._get_probs(rnn_state.output())
-                probs.append(p)
+                output = self.output_char2id[gold_i]
+                rnn_state = rnn_state.add_input(last_output_embeddings)
+                out_vector = w * rnn_state.output() + b
+                probs = dy.softmax(out_vector)
+                last_output_embeddings = self.OUTPUT_LOOKUP[output]
+                losses.append(-dy.log(dy.pick(probs, output)))
 
-            for gold_i in gold_sequence:
-                tag_embedding = self.CHARS_LOOKUP[self.char2id[gold_i]]
-                tag_rnn_state.add_input(tag_embedding)
-
-            losses += [-dy.log(dy.pick(p, self.char2id[output_char])) for p, output_char in
-                       zip(probs, gold_sequence)]
+            for tag_i in tags:
+                tag_embedding = self.TAG_LOOKUP[self.tag2id[tag_i]]
+                tag_rnn_state= tag_rnn_state.add_input(tag_embedding)
         return dy.esum(losses)
 
-    def generate(self, sentence, max_tag_count=50):
+    def generate(self, sentence):
+        res = []
+        dy.renew_cg()
+        w = dy.parameter(self.output_w)
+        b = dy.parameter(self.output_b)
+
         surface_words = [word.surface_word for word in sentence]
         if not self.case_sensitive:
             surface_words = [TrMorphTagger.lower(word) for word in surface_words]
@@ -341,50 +332,57 @@ class TrMorphTagger(object):
         context_representations = self._get_context_representations(surface_words)
         word_representations = self._get_word_representations(surface_words)
 
-        predicted_sequences = []
-        tag_rnn_state = self.tag_rnn.initial_state()
-        for context_representation, word_representation in zip(context_representations, word_representations):
-            if tag_rnn_state.output():
-                output_encoder_output = word_representation + tag_rnn_state.output()
-            else:
-                output_encoder_output = word_representation
-            predicted_sequence = []
-            rnn_state = self.DEC_RNN.initial_state().set_s([context_representation, dy.tanh(context_representation),
-                                                            output_encoder_output, dy.tanh(output_encoder_output)])
-            predicted_char = TrMorphTagger.SENTENCE_BEGIN_TAG
-            counter = 0
-            while True:
-                counter += 1
-                rnn_state = rnn_state.add_input(self.CHARS_LOOKUP[self.char2id[predicted_char]])
-                probs = self._get_probs(rnn_state.output())
-                predicted_char = self.id2char[probs.npvalue().argmax()]
-                if predicted_char == TrMorphTagger.SENTENCE_END_TAG or counter >= max_tag_count:
+        tag_rnn_state = self.tag_rnn.initial_state().add_input(self.TAG_LOOKUP[self.tag2id[TrMorphTagger.EOS]])
+        for word, context_representation, word_representation in zip(sentence,
+                                                                     context_representations,
+                                                                     word_representations):
+
+            output_encoder_output = word_representation + tag_rnn_state.output()
+
+            last_output_embeddings = self.OUTPUT_LOOKUP[self.output_char2id[TrMorphTagger.EOS]]
+            rnn_state = self.DEC_RNN.initial_state().set_s([output_encoder_output,
+                                                            output_encoder_output,
+                                                            context_representation,
+                                                            context_representation])
+            out = []
+            count_eos = 0
+            for i in range(len(word) * 3):
+                if count_eos == 1:
                     break
-                else:
-                    predicted_sequence.append(predicted_char)
-            for seq_i in predicted_sequence:
-                tag_embedding = self.CHARS_LOOKUP[self.char2id[seq_i]]
-                tag_rnn_state.add_input(tag_embedding)
-            predicted_sequences.append(predicted_sequence)
-        return TrMorphTagger._convert_to_morph_analyzer_form(predicted_sequences)
+                rnn_state = rnn_state.add_input(last_output_embeddings)
+                out_vector = w * rnn_state.output() + b
+                probs = dy.softmax(out_vector).vec_value()
+                next_char = probs.index(max(probs))
+                last_output_embeddings = self.OUTPUT_LOOKUP[next_char]
+                if self.id2char[next_char] == TrMorphTagger.EOS:
+                    count_eos += 1
+                    continue
+
+                out.append(self.id2char[next_char])
+            outputs, tags = self._convert_to_morph_analyzer_form(out)
+            res.append(outputs)
+
+            for tag_i in tags:
+                tag_embedding = self.TAG_LOOKUP[self.tag2id[tag_i]]
+                tag_rnn_state = tag_rnn_state.add_input(tag_embedding)
+        return res
 
     @staticmethod
     def _convert_to_morph_analyzer_form(sequence_arr):
         res = []
-        for sequence in sequence_arr:
-            word_result = []
-            for x in sequence:
-                if x == TrMorphTagger.SENTENCE_END_TAG or x == TrMorphTagger.SENTENCE_BEGIN_TAG:
-                    continue
-                elif len(x) == 1:
-                    word_result.append(x)
-                else:
-                    word_result.append("+")
-                    word_result.append(x)
-            word_result = "".join(word_result)
-            word_result = word_result.replace("+DB", "^DB")
-            res.append(word_result)
-        return res
+        tags = []
+        for x in sequence_arr:
+            if x == TrMorphTagger.EOS:
+                continue
+            elif len(x) == 1:
+                res.append(x)
+            else:
+                res.append("+")
+                tags.append(x)
+                res.append(x)
+        res = "".join(res)
+        res = res.replace("+DB", "^DB")
+        return res, tags
 
     def train_model(self, model_name="model", early_stop=False, num_epoch=200):
         max_acc = 0.0
@@ -449,7 +447,9 @@ class TrMorphTagger(object):
             predicted_labels = self.generate(sentence)
             gold_labels = ["".join(word.roots[0]) + "+" + "+".join(word.tags[0]) for word in sentence]
             gold_labels = [gold_label.replace("+DB", "^DB") for gold_label in gold_labels]
+
             for gold_label, predicted_label in zip(gold_labels, predicted_labels):
+                logger.info(gold_label + " <==> " + predicted_label)
                 if gold_label == predicted_label:
                     corrects += 1
             non_ambigious_count += [1 for w in sentence if len(w.roots) == 1].count(1)
