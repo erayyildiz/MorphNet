@@ -172,7 +172,7 @@ class TrMorphTagger(object):
         else:
             return self.split_root_tags_regex.sub(r"\2", analysis)
 
-    def load_data(self, file_path, max_sentence=10000000):
+    def load_data(self, file_path, max_sentence=10):
         logger.info("Loading data from {}".format(file_path))
         sentence = []
         sentences = []
@@ -313,8 +313,10 @@ class TrMorphTagger(object):
             else:
                 output_encoder_output = word_representation
 
-            rnn_state = self.DEC_RNN.initial_state().set_s([context_representation, dy.tanh(context_representation),
-                                                            output_encoder_output, dy.tanh(output_encoder_output)])
+            rnn_state = self.DEC_RNN.initial_state().set_s([dy.tanh(context_representation),
+                                                            dy.tanh(context_representation),
+                                                            dy.tanh(output_encoder_output),
+                                                            dy.tanh(output_encoder_output)])
             for gold_i in gold_sequence:
                 rnn_state = rnn_state.add_input(self.CHARS_LOOKUP[self.char2id[gold_i]])
                 p = self._get_probs(rnn_state.output())
@@ -455,9 +457,10 @@ class TrMorphTagger(object):
 if __name__ == "__main__":
     disambiguator = TrMorphTagger(train_from_scratch=True,
                                   train_data_path="data/data.train.txt",
-                                  # test_data_paths=["data/data.train.txt"],
-                                  test_data_paths=[
-                                      "data/data.test.txt",
-                                      "data/test.merge",
-                                      "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
+                                  test_data_paths=["data/data.train.txt"],
+                                  dev_data_path="data/data.train.txt",
+                                  # test_data_paths=[
+                                  #     "data/data.test.txt",
+                                  #     "data/test.merge",
+                                  #     "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
                                   model_file_name="encoder_decoder_morph_tagger")

@@ -1,0 +1,386 @@
+import random
+import re
+import math
+from collections import namedtuple
+import dynet as dy
+from datetime import datetime
+import pickle
+import logging.config
+
+logging.config.fileConfig('resources/logging.ini')
+logger = logging.getLogger(__file__)
+
+
+class TrMorphTagger(object):
+
+    # HYPER-PARAMETERS
+    LSTM_NUM_OF_LAYERS = 2
+    EMBEDDINGS_SIZE = 64
+    OUTPUT_EMBEDDINGS_SIZE = 256
+    STATE_SIZE = 512
+    ATTENTION_SIZE = 512
+
+    # STATIC VARIABLES
+    EOS = "<s>"
+
+    # COMPILED REGEX PATTERNS
+    analysis_regex = re.compile(r"^([^\+]*)\+(.+)$", re.UNICODE)
+    tag_seperator_regex = re.compile(r"[\+\^]", re.UNICODE)
+    split_root_tags_regex = re.compile(r"^([^\+]+)\+(.+)$", re.IGNORECASE)
+
+    # WORD STRUCT
+    WordStruct = namedtuple("WordStruct", ["surface_word", "roots", "tags"])
+
+    @classmethod
+    def _create_vocab(cls, sentences):
+        logger.info("Building Vocabulary...")
+        char2id = dict()
+        char2id[TrMorphTagger.EOS] = len(char2id)
+        for sentence in sentences:
+            for word in sentence:
+                for ch in word.surface_word:
+                    if ch not in char2id:
+                        char2id[ch] = len(char2id)
+                for root in word.roots:
+                    for ch in root:
+                        if ch not in char2id:
+                            char2id[ch] = len(char2id)
+                for tags in word.tags:
+                    for tag in tags:
+                        if tag not in char2id:
+                            char2id[tag] = len(char2id)
+        id2char = {v: k for k, v in char2id.items()}
+        logger.info("Done.")
+        return char2id, id2char
+
+    @classmethod
+    def _encode(cls, tokens, vocab):
+        return [vocab[token] for token in tokens if token in vocab]
+
+    def _embed(self, token, char_embedding_table):
+        return [char_embedding_table[self.char2id[ch]] for ch in token]
+
+    @staticmethod
+    def lower(text):
+        text = text.replace("Ü", "ü")
+        text = text.replace("Ğ", "ğ")
+        text = text.replace("İ", "i")
+        text = text.replace("Ş", "ş")
+        text = text.replace("Ç", "ç")
+        text = text.replace("Ö", "ö")
+        return text.lower()
+
+    def __init__(self, train_from_scratch=True,
+                 train_data_path="data/data.train.txt",
+                 dev_data_path="data/data.dev.txt", test_data_paths=["data/data.test.txt"],
+                 model_file_name=None,
+                 case_sensitive=False):
+
+        self.case_sensitive = case_sensitive
+
+        if train_from_scratch:
+            assert train_data_path
+            assert len(test_data_paths) > 0
+            self.train = self.load_data(train_data_path)
+            if dev_data_path:
+                self.dev = self.load_data(dev_data_path)
+            else:
+                self.dev = None
+            self.test_paths = test_data_paths
+            self.tests = []
+            for test_path in self.test_paths:
+                self.tests.append(self.load_data(test_path))
+
+            self.char2id, self.id2char = self._create_vocab(self.train)
+
+            if not self.dev:
+                train_size = int(math.floor(0.99 * len(self.train)))
+                self.dev = self.train[train_size:]
+                self.train = self.train[:train_size]
+
+            self.model = dy.Model()
+            self.trainer = dy.SimpleSGDTrainer(self.model, learning_rate=1.6)
+            self.CHARS_LOOKUP = self.model.add_lookup_parameters((len(self.char2id),
+                                                                  TrMorphTagger.EMBEDDINGS_SIZE))
+
+            self.OUTPUT_LOOKUP = self.model.add_lookup_parameters((len(self.char2id),
+                                                                   TrMorphTagger.OUTPUT_EMBEDDINGS_SIZE))
+
+            self.enc_fwd_lstm = dy.LSTMBuilder(TrMorphTagger.LSTM_NUM_OF_LAYERS,
+                                               TrMorphTagger.EMBEDDINGS_SIZE,
+                                               TrMorphTagger.STATE_SIZE, self.model)
+            self.enc_bwd_lstm = dy.LSTMBuilder(TrMorphTagger.LSTM_NUM_OF_LAYERS,
+                                               TrMorphTagger.EMBEDDINGS_SIZE,
+                                               TrMorphTagger.STATE_SIZE, self.model)
+
+            self.dec_lstm = dy.LSTMBuilder(TrMorphTagger.LSTM_NUM_OF_LAYERS,
+                                           TrMorphTagger.STATE_SIZE * 2 + TrMorphTagger.OUTPUT_EMBEDDINGS_SIZE,
+                                           TrMorphTagger.STATE_SIZE, self.model)
+
+            self.attention_w1 = self.model.add_parameters((
+                TrMorphTagger.ATTENTION_SIZE, TrMorphTagger.STATE_SIZE * 2
+            ))
+            self.attention_w2 = self.model.add_parameters(
+                (TrMorphTagger.ATTENTION_SIZE, TrMorphTagger.STATE_SIZE * TrMorphTagger.LSTM_NUM_OF_LAYERS * 2)
+            )
+            self.attention_v = self.model.add_parameters((1, TrMorphTagger.ATTENTION_SIZE))
+
+            self.decoder_w = self.model.add_parameters((len(self.char2id), TrMorphTagger.STATE_SIZE))
+            self.decoder_b = self.model.add_parameters((len(self.char2id)))
+
+            self.train_model(model_name=model_file_name, num_epoch=10000)
+        else:
+            logger.info("Loading Pre-Trained Model")
+            assert model_file_name
+            self.load_model(model_file_name)
+
+    def _get_tags_from_analysis(self, analysis):
+        if analysis.startswith("+"):
+            return self.tag_seperator_regex.split(analysis[2:])
+        else:
+            return self.tag_seperator_regex.split(self.analysis_regex.sub(r"\2", analysis))
+
+    def _get_root_from_analysis(self, analysis):
+        if analysis.startswith("+"):
+            return "+"
+        else:
+            return self.analysis_regex.sub(r"\1", analysis)
+
+    def _get_pos_from_analysis(self, analysis):
+        tags = self._get_tagsstr_from_analysis(analysis)
+        if "^" in tags:
+            tags = tags[tags.rfind("^") + 4:]
+        return tags.split("+")[0]
+
+    def _get_tagsstr_from_analysis(self, analysis):
+        if analysis.startswith("+"):
+            return analysis[2:]
+        else:
+            return self.split_root_tags_regex.sub(r"\2", analysis)
+
+    def load_data(self, file_path, max_sentence=1000000):
+        logger.info("Loading data from {}".format(file_path))
+        sentence = []
+        sentences = []
+        with open(file_path, 'r', encoding="UTF-8") as f:
+            for line in f:
+                trimmed_line = line.strip(" \r\n\t")
+                if trimmed_line.startswith("<S>") or trimmed_line.startswith("<s>"):
+                    sentence = []
+                elif trimmed_line.startswith("</S>") or trimmed_line.startswith("</s>"):
+                    if len(sentence) > 0:
+                        sentences.append(sentence)
+                        if len(sentences) > max_sentence:
+                            return sentences
+                elif len(trimmed_line) == 0 or "<DOC>" in trimmed_line or trimmed_line.startswith(
+                        "</DOC>") or trimmed_line.startswith(
+                        "<TITLE>") or trimmed_line.startswith("</TITLE>"):
+                    pass
+                else:
+                    parses = re.split(r"[\t ]", trimmed_line)
+                    surface = parses[0]
+                    analyzes = parses[1:]
+                    roots = [self._get_root_from_analysis(analysis) for analysis in analyzes]
+                    tags = [self._get_tags_from_analysis(analysis) for analysis in analyzes]
+                    if not self.case_sensitive:
+                        surface = TrMorphTagger.lower(surface)
+                        roots = [TrMorphTagger.lower(root) for root in roots]
+                    current_word = self.WordStruct(surface, roots, tags)
+                    sentence.append(current_word)
+        logger.info("Done.")
+        return sentences
+
+    @staticmethod
+    def _run_rnn(init_state, input_vecs):
+        s = init_state
+
+        states = s.add_inputs(input_vecs)
+        rnn_outputs = [s.output() for s in states]
+        return rnn_outputs
+
+    def _get_word_representations(self, word_reps):
+        fwd_vectors = self._run_rnn(self.enc_fwd_lstm.initial_state(), word_reps)
+        bwd_vectors = self._run_rnn(self.enc_bwd_lstm.initial_state(), list(reversed(word_reps)))
+        bwd_vectors = list(reversed(bwd_vectors))
+        vectors = [dy.concatenate(list(p)) for p in zip(fwd_vectors, bwd_vectors)]
+        return vectors
+
+    def attend(self, input_mat, state, w1dt):
+        w2 = dy.parameter(self.attention_w2)
+        v = dy.parameter(self.attention_v)
+        w2dt = w2 * dy.concatenate(list(state.s()))
+        unnormalized = dy.transpose(v * dy.tanh(dy.colwise_add(w1dt, w2dt)))
+        att_weights = dy.softmax(unnormalized)
+        # context: (encoder_state)
+        context = input_mat * att_weights
+        return context
+
+    def decode(self, vectors, output):
+        output = list(output) + [self.EOS]
+        output = self._encode(output, self.char2id)
+
+        w = dy.parameter(self.decoder_w)
+        b = dy.parameter(self.decoder_b)
+        w1 = dy.parameter(self.attention_w1)
+        input_mat = dy.concatenate_cols(vectors)
+        w1dt = None
+
+        last_output_embeddings = self.OUTPUT_LOOKUP[self.char2id[TrMorphTagger.EOS]]
+        s = self.dec_lstm.initial_state().add_input(dy.concatenate([
+            dy.vecInput(TrMorphTagger.STATE_SIZE * 2), last_output_embeddings]))
+        loss = []
+
+        for ch in output:
+            # w1dt can be computed and cached once for the entire decoding phase
+            w1dt = w1dt or w1 * input_mat
+            vector = dy.concatenate([self.attend(input_mat, s, w1dt), last_output_embeddings])
+            s = s.add_input(vector)
+            out_vector = w * s.output() + b
+            probs = dy.softmax(out_vector)
+            last_output_embeddings = self.OUTPUT_LOOKUP[ch]
+            loss.append(-dy.log(dy.pick(probs, ch)))
+        loss = dy.esum(loss)
+        return loss
+
+    def generate(self, word):
+        embedded = self._embed(word, self.CHARS_LOOKUP)
+        encoded = self._get_word_representations(embedded)
+
+        w = dy.parameter(self.decoder_w)
+        b = dy.parameter(self.decoder_b)
+        w1 = dy.parameter(self.attention_w1)
+        input_mat = dy.concatenate_cols(encoded)
+        w1dt = None
+
+        last_output_embeddings = self.OUTPUT_LOOKUP[self.char2id[TrMorphTagger.EOS]]
+        s = self.dec_lstm.initial_state().add_input(dy.concatenate([dy.vecInput(
+            TrMorphTagger.STATE_SIZE * 2), last_output_embeddings]))
+
+        out = []
+        count_eos = 0
+        for i in range(len(word) * 3):
+            if count_eos == 2:
+                break
+            # w1dt can be computed and cached once for the entire decoding phase
+            w1dt = w1dt or w1 * input_mat
+            vector = dy.concatenate([self.attend(input_mat, s, w1dt), last_output_embeddings])
+            s = s.add_input(vector)
+            out_vector = w * s.output() + b
+            probs = dy.softmax(out_vector).vec_value()
+            next_char = probs.index(max(probs))
+            last_output_embeddings = self.OUTPUT_LOOKUP[next_char]
+            if self.id2char[next_char] == TrMorphTagger.EOS:
+                count_eos += 1
+                continue
+
+            out.append(self.id2char[next_char])
+        return self._convert_to_morph_analyzer_form(out)
+
+    def get_loss(self, word):
+        embedded = self._embed(word.surface_word, self.CHARS_LOOKUP)
+        encoded = self._get_word_representations(embedded)
+        return self.decode(encoded, list(word.roots[0]) + word.tags[0])
+
+    @staticmethod
+    def _convert_to_morph_analyzer_form(sequence_arr):
+        res = []
+        for x in sequence_arr:
+            if x == TrMorphTagger.EOS:
+                continue
+            elif len(x) == 1:
+                res.append(x)
+            else:
+                res.append("+")
+                res.append(x)
+        res = "".join(res)
+        res = res.replace("+DB", "^DB")
+        return res
+
+    def train_model(self, model_name="model", early_stop=False, num_epoch=200):
+        max_acc = 0.0
+        epoch_loss = 0
+        for epoch in range(num_epoch):
+            random.shuffle(self.train)
+            t1 = datetime.now()
+            count = 0
+            for i, sentence in enumerate(self.train, 1):
+                dy.renew_cg()
+                losses = []
+                for word in sentence:
+                    losses.append(self.get_loss(word))
+                loss = dy.esum(losses)
+
+                cur_loss = loss.scalar_value()
+                epoch_loss += cur_loss
+                loss.backward()
+                self.trainer.update()
+
+                # PRINT STATUS
+                if i > 0 and i % 100 == 0:
+                    t2 = datetime.now()
+                    delta = t2 - t1
+                    logger.info("loss = {}  /  {} instances finished in  {} seconds"
+                                .format(epoch_loss / (i * 1.0), i, delta.seconds))
+                count = i
+            t2 = datetime.now()
+            delta = t2 - t1
+            logger.info("Epoch {} finished in {} minutes. loss = {}"
+                        .format(epoch, delta.seconds / 60.0, epoch_loss / count * 1.0))
+
+            epoch_loss = 0
+            logger.info("Calculating Accuracy on dev set")
+            acc, amb_acc = self.calculate_acc(self.dev)
+            logger.info("Accuracy on dev set: {}  ambiguous accuracy on dev: ".format(acc, amb_acc))
+            if acc > max_acc:
+                max_acc = acc
+                logger.info("Max accuracy increased = {}, saving model...".format(str(max_acc)))
+                self.save_model(model_name)
+            elif early_stop and max_acc - acc > 0.05:
+                logger.info("Max accuracy did not increase, early stopping!")
+                break
+
+            logger.info("Calculating Accuracy on test sets")
+            for q in range(len(self.test_paths)):
+                logger.info("Calculating Accuracy on test set: {}".format(self.test_paths[q]))
+                acc, amb_acc = self.calculate_acc(self.tests[q])
+                logger.info(" accuracy: {}    ambiguous accuracy: {}".format(acc, amb_acc))
+
+    def save_model(self, model_name):
+        self.model.save("resources/models/{}.model".format(model_name))
+        with open("resources/models/{}.char2id".format(model_name), "wb") as f:
+            pickle.dump(self.char2id, f)
+
+    def load_model(self, model_name):
+        self.model.load("resources/models/" + model_name + ".model")
+        with open("resources/models/{}.char2id".format(model_name), "rb") as f:
+            self.char2id = pickle.load(self.char2id, f)
+        self.id2char = {v: k for k, v in self.id2char.items()}
+
+    def calculate_acc(self, sentences):
+        corrects = 0
+        non_ambigious_count = 0
+        total = 0
+        for sentence in sentences:
+            for word in sentence:
+                predicted_label = self.generate(word.surface_word)
+                gold_label = word.roots[0] + "+" + "+".join(word.tags[0])
+                gold_label = gold_label.replace("+DB", "^DB")
+                # logger.info(gold_label + " <==> " + predicted_label)
+                if gold_label == predicted_label:
+                    corrects += 1
+                if len(word.roots) == 1:
+                    non_ambigious_count += 1
+                total += 1
+        return (corrects * 1.0 / total), ((corrects - non_ambigious_count) * 1.0 / (total - non_ambigious_count))
+
+
+if __name__ == "__main__":
+    disambiguator = TrMorphTagger(train_from_scratch=True,
+                                  train_data_path="data/data.train.txt",
+                                  test_data_paths=["data/data.dev.txt"],
+                                  dev_data_path="data/data.dev.txt",
+                                  # test_data_paths=[
+                                  #     "data/data.test.txt",
+                                  #     "data/test.merge",
+                                  #     "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
+                                  model_file_name="encoder_decoder_morph_tagger")
