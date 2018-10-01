@@ -15,10 +15,10 @@ class TrMorphTagger(object):
 
     # HYPER-PARAMETERS
     LSTM_NUM_OF_LAYERS = 2
-    EMBEDDINGS_SIZE = 64
-    OUTPUT_EMBEDDINGS_SIZE = 256
-    STATE_SIZE = 512
-    ATTENTION_SIZE = 512
+    EMBEDDINGS_SIZE = 16
+    OUTPUT_EMBEDDINGS_SIZE = 32
+    STATE_SIZE = 64
+    ATTENTION_SIZE = 64
 
     # STATIC VARIABLES
     EOS = "<s>"
@@ -36,6 +36,8 @@ class TrMorphTagger(object):
         logger.info("Building Vocabulary...")
         char2id = dict()
         char2id[TrMorphTagger.EOS] = len(char2id)
+        output_char2id = dict()
+        output_char2id[TrMorphTagger.EOS] = len(output_char2id)
         for sentence in sentences:
             for word in sentence:
                 for ch in word.surface_word:
@@ -45,13 +47,15 @@ class TrMorphTagger(object):
                     for ch in root:
                         if ch not in char2id:
                             char2id[ch] = len(char2id)
+                        if ch not in output_char2id:
+                            output_char2id[ch] = len(output_char2id)
                 for tags in word.tags:
                     for tag in tags:
-                        if tag not in char2id:
-                            char2id[tag] = len(char2id)
-        id2char = {v: k for k, v in char2id.items()}
+                        if tag not in output_char2id:
+                            output_char2id[tag] = len(output_char2id)
+        id2char = {v: k for k, v in output_char2id.items()}
         logger.info("Done.")
-        return char2id, id2char
+        return char2id, output_char2id, id2char
 
     @classmethod
     def _encode(cls, tokens, vocab):
@@ -91,7 +95,7 @@ class TrMorphTagger(object):
             for test_path in self.test_paths:
                 self.tests.append(self.load_data(test_path))
 
-            self.char2id, self.id2char = self._create_vocab(self.train)
+            self.char2id, self.output_char2id, self.id2char = self._create_vocab(self.train)
 
             if not self.dev:
                 train_size = int(math.floor(0.99 * len(self.train)))
@@ -103,7 +107,7 @@ class TrMorphTagger(object):
             self.CHARS_LOOKUP = self.model.add_lookup_parameters((len(self.char2id),
                                                                   TrMorphTagger.EMBEDDINGS_SIZE))
 
-            self.OUTPUT_LOOKUP = self.model.add_lookup_parameters((len(self.char2id),
+            self.OUTPUT_LOOKUP = self.model.add_lookup_parameters((len(self.output_char2id),
                                                                    TrMorphTagger.OUTPUT_EMBEDDINGS_SIZE))
 
             self.enc_fwd_lstm = dy.LSTMBuilder(TrMorphTagger.LSTM_NUM_OF_LAYERS,
@@ -125,8 +129,8 @@ class TrMorphTagger(object):
             )
             self.attention_v = self.model.add_parameters((1, TrMorphTagger.ATTENTION_SIZE))
 
-            self.decoder_w = self.model.add_parameters((len(self.char2id), TrMorphTagger.STATE_SIZE))
-            self.decoder_b = self.model.add_parameters((len(self.char2id)))
+            self.decoder_w = self.model.add_parameters((len(self.output_char2id), TrMorphTagger.STATE_SIZE))
+            self.decoder_b = self.model.add_parameters((len(self.output_char2id)))
 
             self.train_model(model_name=model_file_name, num_epoch=10000)
         else:
@@ -158,7 +162,7 @@ class TrMorphTagger(object):
         else:
             return self.split_root_tags_regex.sub(r"\2", analysis)
 
-    def load_data(self, file_path, max_sentence=1000000):
+    def load_data(self, file_path, max_sentence=1):
         logger.info("Loading data from {}".format(file_path))
         sentence = []
         sentences = []
@@ -199,8 +203,10 @@ class TrMorphTagger(object):
         return rnn_outputs
 
     def _get_word_representations(self, word_reps):
-        fwd_vectors = self._run_rnn(self.enc_fwd_lstm.initial_state(), word_reps)
-        bwd_vectors = self._run_rnn(self.enc_bwd_lstm.initial_state(), list(reversed(word_reps)))
+        fwd_rnn = self.enc_fwd_lstm.initial_state()
+        fwd_vectors = self._run_rnn(fwd_rnn, word_reps)
+        bwd_rnn = self.enc_bwd_lstm.initial_state()
+        bwd_vectors = self._run_rnn(bwd_rnn, list(reversed(word_reps)))
         bwd_vectors = list(reversed(bwd_vectors))
         vectors = [dy.concatenate(list(p)) for p in zip(fwd_vectors, bwd_vectors)]
         return vectors
@@ -217,7 +223,7 @@ class TrMorphTagger(object):
 
     def decode(self, vectors, output):
         output = list(output) + [self.EOS]
-        output = self._encode(output, self.char2id)
+        output = self._encode(output, self.output_char2id)
 
         w = dy.parameter(self.decoder_w)
         b = dy.parameter(self.decoder_b)
@@ -225,24 +231,25 @@ class TrMorphTagger(object):
         input_mat = dy.concatenate_cols(vectors)
         w1dt = None
 
-        last_output_embeddings = self.OUTPUT_LOOKUP[self.char2id[TrMorphTagger.EOS]]
-        s = self.dec_lstm.initial_state().add_input(dy.concatenate([
+        last_output_embeddings = self.OUTPUT_LOOKUP[self.output_char2id[TrMorphTagger.EOS]]
+        decoder_lstm = self.dec_lstm.initial_state()
+        decoder_lstm = decoder_lstm.add_input(dy.concatenate([
             dy.vecInput(TrMorphTagger.STATE_SIZE * 2), last_output_embeddings]))
-        loss = []
+        losses = []
 
         for ch in output:
             # w1dt can be computed and cached once for the entire decoding phase
             w1dt = w1dt or w1 * input_mat
-            vector = dy.concatenate([self.attend(input_mat, s, w1dt), last_output_embeddings])
-            s = s.add_input(vector)
-            out_vector = w * s.output() + b
+            vector = dy.concatenate([self.attend(input_mat, decoder_lstm, w1dt), last_output_embeddings])
+            decoder_lstm = decoder_lstm.add_input(vector)
+            out_vector = w * decoder_lstm.output() + b
             probs = dy.softmax(out_vector)
             last_output_embeddings = self.OUTPUT_LOOKUP[ch]
-            loss.append(-dy.log(dy.pick(probs, ch)))
-        loss = dy.esum(loss)
-        return loss
+            losses.append(-dy.log(dy.pick(probs, ch)))
+        return losses
 
     def generate(self, word):
+        dy.renew_cg()
         embedded = self._embed(word, self.CHARS_LOOKUP)
         encoded = self._get_word_representations(embedded)
 
@@ -252,20 +259,21 @@ class TrMorphTagger(object):
         input_mat = dy.concatenate_cols(encoded)
         w1dt = None
 
-        last_output_embeddings = self.OUTPUT_LOOKUP[self.char2id[TrMorphTagger.EOS]]
-        s = self.dec_lstm.initial_state().add_input(dy.concatenate([dy.vecInput(
-            TrMorphTagger.STATE_SIZE * 2), last_output_embeddings]))
+        last_output_embeddings = self.OUTPUT_LOOKUP[self.output_char2id[TrMorphTagger.EOS]]
+        decoder_lstm = self.dec_lstm.initial_state()
+        decoder_lstm = decoder_lstm.add_input(dy.concatenate([
+            dy.vecInput(TrMorphTagger.STATE_SIZE * 2), last_output_embeddings]))
 
         out = []
         count_eos = 0
         for i in range(len(word) * 3):
-            if count_eos == 2:
+            if count_eos == 1:
                 break
             # w1dt can be computed and cached once for the entire decoding phase
             w1dt = w1dt or w1 * input_mat
-            vector = dy.concatenate([self.attend(input_mat, s, w1dt), last_output_embeddings])
-            s = s.add_input(vector)
-            out_vector = w * s.output() + b
+            vector = dy.concatenate([self.attend(input_mat, decoder_lstm, w1dt), last_output_embeddings])
+            decoder_lstm = decoder_lstm.add_input(vector)
+            out_vector = w * decoder_lstm.output() + b
             probs = dy.softmax(out_vector).vec_value()
             next_char = probs.index(max(probs))
             last_output_embeddings = self.OUTPUT_LOOKUP[next_char]
@@ -307,9 +315,8 @@ class TrMorphTagger(object):
                 dy.renew_cg()
                 losses = []
                 for word in sentence:
-                    losses.append(self.get_loss(word))
+                    losses += self.get_loss(word)
                 loss = dy.esum(losses)
-
                 cur_loss = loss.scalar_value()
                 epoch_loss += cur_loss
                 loss.backward()
@@ -365,7 +372,7 @@ class TrMorphTagger(object):
                 predicted_label = self.generate(word.surface_word)
                 gold_label = word.roots[0] + "+" + "+".join(word.tags[0])
                 gold_label = gold_label.replace("+DB", "^DB")
-                # logger.info(gold_label + " <==> " + predicted_label)
+                logger.info(gold_label + " <==> " + predicted_label)
                 if gold_label == predicted_label:
                     corrects += 1
                 if len(word.roots) == 1:
@@ -377,8 +384,8 @@ class TrMorphTagger(object):
 if __name__ == "__main__":
     disambiguator = TrMorphTagger(train_from_scratch=True,
                                   train_data_path="data/data.train.txt",
-                                  test_data_paths=["data/data.dev.txt"],
-                                  dev_data_path="data/data.dev.txt",
+                                  test_data_paths=["data/data.train.txt"],
+                                  dev_data_path="data/data.train.txt",
                                   # test_data_paths=[
                                   #     "data/data.test.txt",
                                   #     "data/test.merge",

@@ -208,9 +208,12 @@ class TrMorphTagger(object):
     def _run_rnn(init_state, input_vecs):
         s = init_state
 
-        states = s.add_inputs(input_vecs)
-        rnn_outputs = [s.output() for s in states]
-        return rnn_outputs
+        out_vectors = []
+        for vector in input_vecs:
+            s = s.add_input(vector)
+            out_vector = s.output()
+            out_vectors.append(out_vector)
+        return out_vectors
 
     def _get_word_representations(self, words):
         word_representations = []
