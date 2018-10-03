@@ -74,7 +74,69 @@ class TrMorphTagger(object):
                  model_file_name=None,
                  case_sensitive=False):
 
+        if not train_from_scratch:
+            with open("resources/models/{}.char2id".format(model_file_name), "rb") as f:
+                self.char2id = pickle.load(f)
+            with open("resources/models/{}.tag2id".format(model_file_name), "rb") as f:
+                self.tag2id = pickle.load(f)
+            with open("resources/models/{}.output_char2id".format(model_file_name), "rb") as f:
+                self.output_char2id = pickle.load(f)
+            self.id2char = {v: k for k, v in self.output_char2id.items()}
+
         self.case_sensitive = case_sensitive
+        self.model = dy.Model()
+        self.trainer = dy.AdamTrainer(self.model)
+        self.CHARS_LOOKUP = self.model.add_lookup_parameters((len(self.char2id),
+                                                              TrMorphTagger.EMBEDDINGS_SIZE))
+
+        self.OUTPUT_LOOKUP = self.model.add_lookup_parameters((len(self.output_char2id),
+                                                               TrMorphTagger.OUTPUT_EMBEDDINGS_SIZE))
+
+        self.TAG_LOOKUP = self.model.add_lookup_parameters((len(self.tag2id),
+                                                            TrMorphTagger.EMBEDDINGS_SIZE))
+
+        self.individual_word_rnn = dy.LSTMBuilder(1,
+                                                  TrMorphTagger.EMBEDDINGS_SIZE,
+                                                  TrMorphTagger.STATE_SIZE,
+                                                  self.model)
+        self.individual_word_rnn.set_dropout(0.3)
+
+        self.tag_rnn = dy.LSTMBuilder(1,
+                                      TrMorphTagger.EMBEDDINGS_SIZE,
+                                      TrMorphTagger.STATE_SIZE,
+                                      self.model)
+        self.tag_rnn.set_dropout(0.3)
+
+        self.surface_rnn = dy.LSTMBuilder(1,
+                                          TrMorphTagger.EMBEDDINGS_SIZE,
+                                          TrMorphTagger.STATE_SIZE,
+                                          self.model)
+        self.surface_rnn.set_dropout(0.3)
+
+        self.fwd_context_rnn = dy.LSTMBuilder(1,
+                                              TrMorphTagger.STATE_SIZE,
+                                              TrMorphTagger.STATE_SIZE,
+                                              self.model)
+        self.fwd_context_rnn.set_dropout(0.3)
+
+        self.bwd_context_rnn = dy.LSTMBuilder(1,
+                                              TrMorphTagger.STATE_SIZE,
+                                              TrMorphTagger.STATE_SIZE,
+                                              self.model)
+        self.bwd_context_rnn.set_dropout(0.3)
+
+        self.DEC_RNN = dy.LSTMBuilder(TrMorphTagger.LSTM_NUM_OF_LAYERS,
+                                      TrMorphTagger.OUTPUT_EMBEDDINGS_SIZE,
+                                      TrMorphTagger.STATE_SIZE,
+                                      self.model)
+        self.DEC_RNN.set_dropout(0.3)
+
+        self.context_w = self.model.add_parameters((TrMorphTagger.STATE_SIZE, TrMorphTagger.STATE_SIZE * 2))
+        self.context_b = self.model.add_parameters(TrMorphTagger.STATE_SIZE)
+
+        # project the rnn output to a vector of VOCAB_SIZE length
+        self.output_w = self.model.add_parameters((len(self.output_char2id), TrMorphTagger.STATE_SIZE))
+        self.output_b = self.model.add_parameters((len(self.output_char2id)))
 
         if train_from_scratch:
             assert train_data_path
@@ -95,60 +157,6 @@ class TrMorphTagger(object):
                 train_size = int(math.floor(0.99 * len(self.train)))
                 self.dev = self.train[train_size:]
                 self.train = self.train[:train_size]
-
-            self.model = dy.Model()
-            self.trainer = dy.AdamTrainer(self.model)
-            self.CHARS_LOOKUP = self.model.add_lookup_parameters((len(self.char2id),
-                                                                  TrMorphTagger.EMBEDDINGS_SIZE))
-
-            self.OUTPUT_LOOKUP = self.model.add_lookup_parameters((len(self.output_char2id),
-                                                                   TrMorphTagger.OUTPUT_EMBEDDINGS_SIZE))
-
-            self.TAG_LOOKUP = self.model.add_lookup_parameters((len(self.tag2id),
-                                                                TrMorphTagger.EMBEDDINGS_SIZE))
-
-            self.individual_word_rnn = dy.LSTMBuilder(1,
-                                                      TrMorphTagger.EMBEDDINGS_SIZE,
-                                                      TrMorphTagger.STATE_SIZE,
-                                                      self.model)
-            self.individual_word_rnn.set_dropout(0.3)
-
-            self.tag_rnn = dy.LSTMBuilder(1,
-                                          TrMorphTagger.EMBEDDINGS_SIZE,
-                                          TrMorphTagger.STATE_SIZE,
-                                          self.model)
-            self.tag_rnn.set_dropout(0.3)
-
-            self.surface_rnn = dy.LSTMBuilder(1,
-                                              TrMorphTagger.EMBEDDINGS_SIZE,
-                                              TrMorphTagger.STATE_SIZE,
-                                              self.model)
-            self.surface_rnn.set_dropout(0.3)
-
-            self.fwd_context_rnn = dy.LSTMBuilder(1,
-                                                  TrMorphTagger.STATE_SIZE,
-                                                  TrMorphTagger.STATE_SIZE,
-                                                  self.model)
-            self.fwd_context_rnn.set_dropout(0.3)
-
-            self.bwd_context_rnn = dy.LSTMBuilder(1,
-                                                  TrMorphTagger.STATE_SIZE,
-                                                  TrMorphTagger.STATE_SIZE,
-                                                  self.model)
-            self.bwd_context_rnn.set_dropout(0.3)
-
-            self.DEC_RNN = dy.LSTMBuilder(TrMorphTagger.LSTM_NUM_OF_LAYERS,
-                                          TrMorphTagger.OUTPUT_EMBEDDINGS_SIZE,
-                                          TrMorphTagger.STATE_SIZE,
-                                          self.model)
-            self.DEC_RNN.set_dropout(0.3)
-
-            self.context_w = self.model.add_parameters((TrMorphTagger.STATE_SIZE, TrMorphTagger.STATE_SIZE * 2))
-            self.context_b = self.model.add_parameters(TrMorphTagger.STATE_SIZE)
-
-            # project the rnn output to a vector of VOCAB_SIZE length
-            self.output_w = self.model.add_parameters((len(self.output_char2id), TrMorphTagger.STATE_SIZE))
-            self.output_b = self.model.add_parameters((len(self.output_char2id)))
 
             self.train_model(model_name=model_file_name)
         else:
@@ -432,12 +440,13 @@ class TrMorphTagger(object):
         self.model.save("models/{}.model".format(model_name))
         with open("models/{}.char2id".format(model_name), "w") as f:
             pickle.dump(self.char2id, f)
+        with open("models/{}.output_char2id".format(model_name), "w") as f:
+            pickle.dump(self.output_char2id, f)
+        with open("models/{}.tag2id".format(model_name), "w") as f:
+            pickle.dump(self.tag2id, f)
 
     def load_model(self, model_name):
-        self.model.load("models/" + model_name + ".model")
-        with open("models/{}.char2id".format(model_name), "w") as f:
-            self.char2id = pickle.load(self.char2id, f)
-        self.id2char = {v: k for k, v in self.id2char.items()}
+        self.model.load("resources/models/" + model_name + ".model")
 
     def calculate_acc(self, sentences):
         corrects = 0
@@ -456,9 +465,13 @@ class TrMorphTagger(object):
             total += len(sentence)
         return (corrects * 1.0 / total), ((corrects - non_ambigious_count) * 1.0 / (total - non_ambigious_count))
 
+    def predict(self, tokens):
+        sentence = [TrMorphTagger.WordStruct(token, [], []) for token in tokens]
+        return self.generate(sentence)
+
 
 if __name__ == "__main__":
-    disambiguator = TrMorphTagger(train_from_scratch=True,
+    disambiguator = TrMorphTagger(train_from_scratch=False,
                                   train_data_path="data/data.train.txt",
                                   test_data_paths=["data/data.train.txt"],
                                   dev_data_path="data/data.train.txt",
@@ -467,3 +480,4 @@ if __name__ == "__main__":
                                   #     "data/test.merge",
                                   #     "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
                                   model_file_name="encoder_decoder_morph_tagger")
+    disambiguator.predict(["adam", "eve", "geldi", "."])
