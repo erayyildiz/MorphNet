@@ -82,6 +82,20 @@ class TrMorphTagger(object):
             with open("resources/models/{}.output_char2id".format(model_file_name), "rb") as f:
                 self.output_char2id = pickle.load(f)
             self.id2char = {v: k for k, v in self.output_char2id.items()}
+        else:
+            assert train_data_path
+            assert len(test_data_paths) > 0
+            self.train = self.load_data(train_data_path)
+            if dev_data_path:
+                self.dev = self.load_data(dev_data_path)
+            else:
+                self.dev = None
+            self.test_paths = test_data_paths
+            self.tests = []
+            for test_path in self.test_paths:
+                self.tests.append(self.load_data(test_path))
+
+            self.char2id, self.output_char2id, self.tag2id, self.id2char = self._create_vocab(self.train)
 
         self.case_sensitive = case_sensitive
         self.model = dy.Model()
@@ -139,20 +153,6 @@ class TrMorphTagger(object):
         self.output_b = self.model.add_parameters((len(self.output_char2id)))
 
         if train_from_scratch:
-            assert train_data_path
-            assert len(test_data_paths) > 0
-            self.train = self.load_data(train_data_path)
-            if dev_data_path:
-                self.dev = self.load_data(dev_data_path)
-            else:
-                self.dev = None
-            self.test_paths = test_data_paths
-            self.tests = []
-            for test_path in self.test_paths:
-                self.tests.append(self.load_data(test_path))
-
-            self.char2id, self.output_char2id, self.tag2id, self.id2char = self._create_vocab(self.train)
-
             if not self.dev:
                 train_size = int(math.floor(0.99 * len(self.train)))
                 self.dev = self.train[train_size:]
