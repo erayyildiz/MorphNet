@@ -74,6 +74,8 @@ class TrMorphTagger(object):
                  model_file_name=None,
                  case_sensitive=False):
 
+        self.case_sensitive = case_sensitive
+
         if not train_from_scratch:
             with open("resources/models/{}.char2id".format(model_file_name), "rb") as f:
                 self.char2id = pickle.load(f)
@@ -97,7 +99,6 @@ class TrMorphTagger(object):
 
             self.char2id, self.output_char2id, self.tag2id, self.id2char = self._create_vocab(self.train)
 
-        self.case_sensitive = case_sensitive
         self.model = dy.Model()
         self.trainer = dy.AdamTrainer(self.model)
         self.CHARS_LOOKUP = self.model.add_lookup_parameters((len(self.char2id),
@@ -471,13 +472,12 @@ class TrMorphTagger(object):
 
 
 if __name__ == "__main__":
-    disambiguator = TrMorphTagger(train_from_scratch=False,
-                                  train_data_path="data/data.train.txt",
-                                  test_data_paths=["data/data.train.txt"],
+    disambiguator = TrMorphTagger(train_data_path="data/data.train.txt",
+                                  # test_data_paths=["data/data.train.txt"],
                                   dev_data_path="data/data.train.txt",
-                                  # test_data_paths=[
-                                  #     "data/data.test.txt",
-                                  #     "data/test.merge",
-                                  #     "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
-                                  model_file_name="encoder_decoder_morph_tagger")
+                                  test_data_paths=[
+                                      "data/data.test.txt",
+                                      "data/test.merge",
+                                      "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
+                                  model_file_name="morph_tagger")
     disambiguator.predict(["adam", "eve", "geldi", "."])
