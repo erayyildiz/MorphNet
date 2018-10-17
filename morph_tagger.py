@@ -189,7 +189,7 @@ class TrMorphTagger(object):
         else:
             return self.split_root_tags_regex.sub(r"\2", analysis)
 
-    def load_data(self, file_path, max_sentence=1):
+    def load_data(self, file_path, max_sentence=10000000):
         logger.info("Loading data from {}".format(file_path))
         sentence = []
         sentences = []
@@ -405,7 +405,11 @@ class TrMorphTagger(object):
                 cur_loss = loss_exp.scalar_value()
                 epoch_loss += cur_loss
                 loss_exp.backward()
-                self.trainer.update()
+                try:
+                    self.trainer.update()
+                except Exception as e:
+                    logger.error(str(e))
+                    continue
 
                 # PRINT STATUS
                 if i > 0 and i % 100 == 0:
@@ -438,12 +442,12 @@ class TrMorphTagger(object):
                 logger.info(" accuracy: {}    ambiguous accuracy: {}".format(acc, amb_acc))
 
     def save_model(self, model_name):
-        self.model.save("models/{}.model".format(model_name))
-        with open("models/{}.char2id".format(model_name), "w") as f:
+        self.model.save("resources/models/{}.model".format(model_name))
+        with open("resources/models/{}.char2id".format(model_name), "wb") as f:
             pickle.dump(self.char2id, f)
-        with open("models/{}.output_char2id".format(model_name), "w") as f:
+        with open("resources/models/{}.output_char2id".format(model_name), "wb") as f:
             pickle.dump(self.output_char2id, f)
-        with open("models/{}.tag2id".format(model_name), "w") as f:
+        with open("resources/models/{}.tag2id".format(model_name), "wb") as f:
             pickle.dump(self.tag2id, f)
 
     def load_model(self, model_name):
@@ -459,7 +463,7 @@ class TrMorphTagger(object):
             gold_labels = [gold_label.replace("+DB", "^DB") for gold_label in gold_labels]
 
             for gold_label, predicted_label in zip(gold_labels, predicted_labels):
-                logger.info(gold_label + " <==> " + predicted_label)
+                # logger.info(gold_label + " <==> " + predicted_label)
                 if gold_label == predicted_label:
                     corrects += 1
             non_ambigious_count += [1 for w in sentence if len(w.roots) == 1].count(1)
@@ -474,10 +478,9 @@ class TrMorphTagger(object):
 if __name__ == "__main__":
     disambiguator = TrMorphTagger(train_data_path="data/data.train.txt",
                                   # test_data_paths=["data/data.train.txt"],
-                                  dev_data_path="data/data.train.txt",
+                                  dev_data_path="data/data.dev.txt",
                                   test_data_paths=[
                                       "data/data.test.txt",
                                       "data/test.merge",
                                       "data/Morph.Dis.Test.Hand.Labeled-20K.txt"],
                                   model_file_name="morph_tagger")
-    disambiguator.predict(["adam", "eve", "geldi", "."])
