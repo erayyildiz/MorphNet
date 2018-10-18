@@ -100,7 +100,8 @@ class TrMorphTagger(object):
             self.char2id, self.output_char2id, self.tag2id, self.id2char = self._create_vocab(self.train)
 
         self.model = dy.Model()
-        self.trainer = dy.AdamTrainer(self.model)
+        # self.trainer = dy.AdamTrainer(self.model)
+        self.trainer = dy.SimpleSGDTrainer(self.model, learning_rate=1.6)
         self.CHARS_LOOKUP = self.model.add_lookup_parameters((len(self.char2id),
                                                               TrMorphTagger.EMBEDDINGS_SIZE))
 
@@ -311,10 +312,7 @@ class TrMorphTagger(object):
             output_encoder_output = word_representation + tag_rnn_state.output()
 
             last_output_embeddings = self.OUTPUT_LOOKUP[self.output_char2id[TrMorphTagger.EOS]]
-            rnn_state = self.DEC_RNN.initial_state().set_s([output_encoder_output,
-                                                            output_encoder_output,
-                                                            context_representation,
-                                                            context_representation])
+            rnn_state = self.DEC_RNN.initial_state().set_s([context_representation, context_representation, output_encoder_output, output_encoder_output])
             for gold_i in gold_sequence:
                 output = self.output_char2id[gold_i]
                 rnn_state = rnn_state.add_input(last_output_embeddings)
@@ -349,10 +347,8 @@ class TrMorphTagger(object):
             output_encoder_output = word_representation + tag_rnn_state.output()
 
             last_output_embeddings = self.OUTPUT_LOOKUP[self.output_char2id[TrMorphTagger.EOS]]
-            rnn_state = self.DEC_RNN.initial_state().set_s([output_encoder_output,
-                                                            output_encoder_output,
-                                                            context_representation,
-                                                            context_representation])
+            rnn_state = self.DEC_RNN.initial_state().set_s([context_representation, context_representation, output_encoder_output, output_encoder_output])
+
             out = []
             count_eos = 0
             for i in range(len(word) * 3):
@@ -409,6 +405,7 @@ class TrMorphTagger(object):
                     self.trainer.update()
                 except Exception as e:
                     logger.error(str(e))
+                    logger.info("Loss: {}".format(cur_loss)) 
                     continue
 
                 # PRINT STATUS
@@ -422,7 +419,6 @@ class TrMorphTagger(object):
             delta = t2 - t1
             logger.info("Epoch {} finished in {} minutes. loss = {}"
                         .format(epoch, delta.seconds / 60.0, epoch_loss / count * 1.0))
-
             epoch_loss = 0
             logger.info("Calculating Accuracy on dev set")
             acc, amb_acc = self.calculate_acc(self.dev)
@@ -440,6 +436,7 @@ class TrMorphTagger(object):
                 logger.info("Calculating Accuracy on test set: {}".format(self.test_paths[q]))
                 acc, amb_acc = self.calculate_acc(self.tests[q])
                 logger.info(" accuracy: {}    ambiguous accuracy: {}".format(acc, amb_acc))
+            self.trainer.learning_rate = self.trainer.learning_rate / (1 - 0.8)
 
     def save_model(self, model_name):
         self.model.save("resources/models/{}.model".format(model_name))
